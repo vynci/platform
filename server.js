@@ -29,7 +29,7 @@ if ('development' == app.get('env')) {
 }
 
 //connect to the db server:
-mongoose.connect('mongodb://vynci:f5tpareg@kahana.mongohq.com:10050/vynci-test');
+mongoose.connect('mongodb://vynci:vynci123@kahana.mongohq.com:10050/vynci-test');
 mongoose.connection.on('open', function() {
     console.log("Connected to Mongoose...");
 
