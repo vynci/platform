@@ -5,7 +5,8 @@ var express = require('express'),
     exphbs = require('express3-handlebars'),
     mongoose = require('mongoose'),
     seeder = require('./app/seeder'),
-    app = express();
+    app = express(),
+    socket = require('socket.io');
 
 app.set('port', process.env.PORT || 3300);
 app.set('views', __dirname + '/views');
@@ -41,6 +42,22 @@ mongoose.connection.on('open', function() {
 routes.initialize(app);
 
 //finally boot up the server:
-http.createServer(app).listen(app.get('port'), function() {
+var server = http.createServer(app).listen(app.get('port'), function() {
     console.log('Server up: http://localhost:' + app.get('port'));
+});
+
+var io = socket.listen(server);
+
+module.exports.emitSocket = function(status){
+    io.sockets.emit('status', status);
+    console.log(status);
+}
+
+io.sockets.on('connection', function (socket) {
+    io.sockets.emit('status', { status: 'hello world' }); // note the use of io.sockets to emit but socket.on to listen
+    socket.on('reset', function (data) {
+        status = "War is imminent!";
+        io.sockets.emit('status', { status: 'test' });
+    });
+
 });

@@ -1,6 +1,7 @@
-var models = require('../app/models'),
+var models = require('../app/models'), 
+    server = require('../server'),    
     md5 = require('MD5');
-
+console.log(server);
 module.exports = {
     index: function(req, res) {
         models.Device.find({}, function(err, data) {
@@ -43,6 +44,7 @@ module.exports = {
                     }
                     else{
                         res.json(device);
+                        server.emitSocket(device);
                     }                    
                 });
             }
