@@ -154,8 +154,8 @@ label {
 #content {
   height: 300px;
 }
-.contact_small,
-.contact_full {
+.device_small,
+.device_full {
   cursor: pointer;
   width: 260px;
   float: left;
@@ -164,23 +164,43 @@ label {
   margin-right: 10px;
   margin-bottom: 10px;
 }
-.contact_small:hover {
-  border: solid 1px blue;
+.device_small .details,
+.device_full .details {
+  width: 100%;
+  padding: 1px;
+  height: 45px;
+  margin-bottom: 5px;
 }
-.contact_small img {
+.device_small .details:hover,
+.device_full .details:hover {
+  background: #F7F7F7;
+}
+.device_small .onoffswitch,
+.device_full .onoffswitch {
+  position: relative;
+  cursor: pointer;
+  background: #EEEEEE;
+  width: 100%;
+  text-align: center;
+}
+.device_small .active-switch,
+.device_full .active-switch {
+  background: #2FFF60;
+}
+.device_small img {
   float: left;
   width: 45px;
   height: 45px;
   margin-right: 5px;
 }
-.contact_full {
+.device_full {
   float: none;
   height: 325px;
 }
-.contact_full img {
+.device_full img {
   margin-left: 5px;
 }
-.add_contact label {
+.add_device label {
   display: inline-block;
   width: 120px;
   float: left;

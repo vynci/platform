@@ -1,8 +1,8 @@
 var Marionette = require('backbone.marionette'),
     Controller = require('./controller'),
     Router = require('./router'),
-    ContactModel = require('./models/contact'),
-    ContactsCollection = require('./collections/contacts');
+    DeviceModel = require('./models/device'),
+    DevicesCollection = require('./collections/devices');
 
 module.exports = App = function App() {};
 
@@ -16,10 +16,10 @@ App.prototype.start = function(){
         App.data = {};
 
         // load up some initial data:
-        var contacts = new ContactsCollection();
-        contacts.fetch({
+        var devices = new DevicesCollection();
+        devices.fetch({
             success: function() {
-                App.data.contacts = contacts;
+                App.data.devices = devices;
                 App.core.vent.trigger('app:start');
             }
         });

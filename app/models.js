@@ -2,16 +2,12 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId;
 
-var Contact = new Schema({
-    email:      { type: String },
-    name: {
-        first:  { type: String },
-        last:   { type: String }
-    },
-    phone:      { type: String },
-    gravatar:   { type: String }
+var Device = new Schema({
+    name:      { type: String },
+    description:      { type: String },
+    state: {type: String}
 });
 
 module.exports = {
-    Contact: mongoose.model('Contact', Contact)
+    Device: mongoose.model('Device', Device)
 };

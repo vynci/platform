@@ -1,11 +1,11 @@
 var home = require('../controllers/home'),
-    contacts = require('../controllers/contacts');
+    devices = require('../controllers/devices');
 
 module.exports.initialize = function(app) {
     app.get('/', home.index);
-    app.get('/api/contacts', contacts.index);
-    app.get('/api/contacts/:id', contacts.getById);
-    app.post('/api/contacts', contacts.add);
-    // app.put('/api/contacts', contacts.update);
-    app.delete('/api/contacts/:id', contacts.delete);
+    app.get('/api/devices', devices.index);
+    app.get('/api/devices/:id', devices.getById);
+    app.post('/api/devices', devices.add);
+    app.put('/api/devices/:id', devices.update);
+    app.delete('/api/devices/:id', devices.delete);
 };

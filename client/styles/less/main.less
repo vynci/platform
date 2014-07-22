@@ -8,14 +8,45 @@ label { display: block; float: left; width: 120px; clear: left; }
 
 #content { height: 300px; }
 
-.contact_small, .contact_full { cursor: pointer; width: 260px; float: left; border: solid 1px #c0c0c0; padding: 5px; margin-right: 10px; margin-bottom: 10px; }
-.contact_small:hover { border: solid 1px blue;}
-.contact_small img { float: left; width: 45px; height: 45px; margin-right: 5px; }
+.device_small, .device_full { 
+	cursor: pointer; 
+	width: 260px; 
+	float: left; 
+	border: solid 1px #c0c0c0; 
+	padding: 5px; 
+	margin-right: 10px; 
+	margin-bottom: 10px; 
 
-.contact_full { float: none; height: 325px;}
-.contact_full img { margin-left: 5px; }
+	.details {
+		width: 100%;
+		padding: 1px; 
+		height: 45px;
+		margin-bottom: 5px;
+	}
 
-.add_contact label { display: inline-block; width: 120px; float: left; clear: left; }
+	.details:hover { background: #F7F7F7;}
+
+	.onoffswitch {
+		position: relative;
+		cursor: pointer;
+		background: #EEEEEE;
+		width:100%;		  
+		text-align: center;
+	}
+
+	.active-switch{
+		background: #2FFF60;		
+	}
+	
+}
+.device_small img { float: left; width: 45px; height: 45px; margin-right: 5px; }
+
+.device_full { float: none; height: 325px;}
+.device_full img { margin-left: 5px; }
+
+.add_device label { display: inline-block; width: 120px; float: left; clear: left; }
 
 #output {margin-top: 2em; font-size: .9em; border: solid 1px #c0c0c0; background-color: #f0f0f0; padding: 5px;}
 #output li {margin-left: 30px; list-style-type: decimal;}
+
+

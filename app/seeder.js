@@ -4,49 +4,19 @@ var mongoose = require('mongoose'),
 
 module.exports = {
     check: function() {
-        models.Contact.find({}, function(err, contacts) {
-            if (contacts.length === 0) {
-                console.log('no contacts found, seeding...');
-                var newContact = new models.Contact({
-                    email: 'jkat98@gmail.com',
-                    name: {
-                        first: 'Jason',
-                        last: 'Krol'
-                    },
-                    phone: '215-123-1234',
-                    gravatar: md5('jkat98@gmail.com')
+        models.Device.find({}, function(err, devices) {
+            if (devices.length === 0) {
+                console.log('no device found, seeding...');
+                var newDevice = new models.Device({
+                    name: 'Living Room',
+                    description: 'Ventilation Control',
+                    state: 'off'
                 });
-                newContact.save(function(err, contact) {
-                    console.log('successfully inserted contact: ' + contact._id);
-                });
-
-                newContact = new models.Contact({
-                    email: 'testerson@example.com',
-                    name: {
-                        first: 'Steve',
-                        last: 'Testerson'
-                    },
-                    phone: '215-123-1234',
-                    gravatar: md5('testerson@example.com')
-                });
-                newContact.save(function(err, contact) {
-                    console.log('successfully inserted contact: ' + contact._id);
-                });
-
-                newContact = new models.Contact({
-                    email: 'nancy@testerson.com',
-                    name: {
-                        first: 'Nancy',
-                        last: 'Testerson'
-                    },
-                    phone: '215-123-1234',
-                    gravatar: md5('nancy@testerson.com')
-                });
-                newContact.save(function(err, contact) {
-                    console.log('successfully inserted contact: ' + contact._id);
+                newDevice.save(function(err, device) {
+                    console.log('successfully inserted device: ' + device._id);
                 });
             } else {
-                console.log('found ' + contacts.length + ' existing contacts!');
+                console.log('found ' + devices.length + ' existing devices!');
             }
         });
     }
