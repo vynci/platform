@@ -14,15 +14,28 @@ App.prototype.start = function(){
 
         App.views = {};
         App.data = {};
+        App.data.user = '';
 
-        // load up some initial data:
-        var devices = new DevicesCollection();
-        devices.fetch({
-            success: function() {
-                App.data.devices = devices;
+        $.get( '/api/auth' )
+          .done(function( data ) {            
+            if(typeof data === 'object' && data.local.email){
+                App.data.user = data.local.email;
+                var devices = new DevicesCollection();
+                devices.fetch({
+                    success: function() {
+                        App.data.devices = devices;
+                        App.core.vent.trigger('app:start');
+                    },
+                    url: '/api/devicesByOwner/' + data.local.email                    
+                });                 
+            }
+            else{
                 App.core.vent.trigger('app:start');
             }
-        });
+           
+          });
+        // load up some initial data:
+        //
     });
 
     App.core.vent.bind('app:start', function(options){
@@ -40,6 +53,11 @@ App.prototype.start = function(){
 
     App.core.vent.bind('app:log', function(msg) {
         console.log(msg);
+    });
+
+    App.core.vent.bind('app:login', function(msg) {
+        console.log('hello login');
+
     });
 
     App.core.start();

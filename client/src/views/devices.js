@@ -38,9 +38,15 @@ var itemView = Marionette.ItemView.extend({
     }
 });
 
-module.exports = CollectionView = Marionette.CollectionView.extend({
+module.exports = CollectionView = Marionette.CompositeView.extend({
+    template: require('../../templates/devices_container.hbs'),    
     initialize: function() {
         this.listenTo(this.collection, 'change', this.render);
-    },
-    itemView: itemView
+    },    
+    itemView: itemView,
+
+    onRender : function(){
+        this.$el.find('span.email').html(window.App.data.user);
+    }
+
 });

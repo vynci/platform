@@ -4,4 +4,5 @@ var Backbone = require('backbone'),
 module.exports = DevicesCollection = Backbone.Collection.extend({
     model:  DeviceModel,
     url: '/api/devices'
+ 
 });

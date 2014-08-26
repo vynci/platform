@@ -8,6 +8,7 @@ module.exports = {
             res.json(data);
         });
     },
+
     getById: function(req, res) {
         models.Device.find({ _id: req.params.id }, function(err, device) {
             if (err) {
@@ -17,6 +18,17 @@ module.exports = {
             }
         });
     },
+
+    getByOwner: function(req, res) {
+        models.Device.find({ owner: req.params.owner }, function(err, device) {
+            if (err) {
+                res.json({error: 'Device not found1.'});
+            } else {
+                res.json(device);
+            }
+        });
+    },
+
     add: function(req, res) {
         var newDevice = new models.Device(req.body);
         newDevice.gravatar = md5(newDevice.email);

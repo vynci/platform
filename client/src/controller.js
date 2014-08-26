@@ -1,19 +1,40 @@
 var Marionette = require('backbone.marionette'),
     DevicesView = require('./views/devices'),
     DeviceDetailsView = require('./views/device_details'),
+    LoginView = require('./views/login'),
+    SignUpView = require('./views/signup'),
     AddDeviceView = require('./views/add');
 
 module.exports = Controller = Marionette.Controller.extend({
     initialize: function() {
         App.core.vent.trigger('app:log', 'Controller: Initializing');
-        window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });
+        //window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });
+        window.App.views.loginView = new LoginView();
     },
 
+    login: function() {
+        window.App.views.loginView = new LoginView();
+        App.core.vent.trigger('app:log', 'Controller: "login" route hit.');
+        var view = window.App.views.loginView;
+        this.renderView(view);
+        window.App.router.navigate('#login');
+    },
+
+    signup: function() {
+        window.App.views.signupView = new SignUpView();
+        App.core.vent.trigger('app:log', 'Controller: "signup" route hit.');
+        var view = window.App.views.signupView;
+        this.renderView(view);
+        window.App.router.navigate('#signup');
+    },    
+
     home: function() {
-        App.core.vent.trigger('app:log', 'Controller: "Home" route hit.');
+        console.log('home!');
+        App.core.vent.trigger('app:login');
+        window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });        
         var view = window.App.views.devicesView;
         this.renderView(view);
-        window.App.router.navigate('#');
+        window.App.router.navigate('#home');
     },
 
     details: function(id) {

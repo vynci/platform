@@ -11,6 +11,7 @@ module.exports = AddView = Marionette.ItemView.extend({
         var newDevice = {
             name: this.$el.find('#name').val(),
             description: this.$el.find('#description').val(),
+            owner: window.App.data.user,
             state: 'off'
         };
 

@@ -5,7 +5,8 @@ var mongoose = require('mongoose'),
 var Device = new Schema({
     name:      { type: String },
     description:      { type: String },
-    state: {type: String}
+    state: {type: String},
+    owner: {type: String}
 });
 
 module.exports = {

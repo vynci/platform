@@ -15171,15 +15171,28 @@ App.prototype.start = function(){
 
         App.views = {};
         App.data = {};
+        App.data.user = '';
 
-        // load up some initial data:
-        var devices = new DevicesCollection();
-        devices.fetch({
-            success: function() {
-                App.data.devices = devices;
+        $.get( '/api/auth' )
+          .done(function( data ) {            
+            if(typeof data === 'object' && data.local.email){
+                App.data.user = data.local.email;
+                var devices = new DevicesCollection();
+                devices.fetch({
+                    success: function() {
+                        App.data.devices = devices;
+                        App.core.vent.trigger('app:start');
+                    },
+                    url: '/api/devicesByOwner/' + data.local.email                    
+                });                 
+            }
+            else{
                 App.core.vent.trigger('app:start');
             }
-        });
+           
+          });
+        // load up some initial data:
+        //
     });
 
     App.core.vent.bind('app:start', function(options){
@@ -15199,35 +15212,62 @@ App.prototype.start = function(){
         console.log(msg);
     });
 
+    App.core.vent.bind('app:login', function(msg) {
+        console.log('hello login');
+
+    });
+
     App.core.start();
 };
 
-},{"./collections/devices":2,"./controller":3,"./models/device":5,"./router":6}],2:[function(require,module,exports){
+},{"./collections/devices":2,"./controller":3,"./models/device":5,"./router":7}],2:[function(require,module,exports){
 var Backbone = require('backbone'),
     DeviceModel = require('../models/device');
 
 module.exports = DevicesCollection = Backbone.Collection.extend({
     model:  DeviceModel,
     url: '/api/devices'
+ 
 });
 
 },{"../models/device":5}],3:[function(require,module,exports){
 var Marionette = require('backbone.marionette'),
     DevicesView = require('./views/devices'),
     DeviceDetailsView = require('./views/device_details'),
+    LoginView = require('./views/login'),
+    SignUpView = require('./views/signup'),
     AddDeviceView = require('./views/add');
 
 module.exports = Controller = Marionette.Controller.extend({
     initialize: function() {
         App.core.vent.trigger('app:log', 'Controller: Initializing');
-        window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });
+        //window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });
+        window.App.views.loginView = new LoginView();
     },
 
+    login: function() {
+        window.App.views.loginView = new LoginView();
+        App.core.vent.trigger('app:log', 'Controller: "login" route hit.');
+        var view = window.App.views.loginView;
+        this.renderView(view);
+        window.App.router.navigate('#login');
+    },
+
+    signup: function() {
+        window.App.views.signupView = new SignUpView();
+        App.core.vent.trigger('app:log', 'Controller: "signup" route hit.');
+        var view = window.App.views.signupView;
+        this.renderView(view);
+        window.App.router.navigate('#signup');
+    },    
+
     home: function() {
-        App.core.vent.trigger('app:log', 'Controller: "Home" route hit.');
+        console.log('home!');
+        App.core.vent.trigger('app:login');
+        window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });        
         var view = window.App.views.devicesView;
         this.renderView(view);
-        window.App.router.navigate('#');
+        window.App.router.navigate('#home');
     },
 
     details: function(id) {
@@ -15259,7 +15299,7 @@ module.exports = Controller = Marionette.Controller.extend({
     }
 });
 
-},{"./views/add":7,"./views/device_details":8,"./views/devices":9}],4:[function(require,module,exports){
+},{"./views/add":8,"./views/device_details":9,"./views/devices":10,"./views/login":11,"./views/signup":12}],4:[function(require,module,exports){
 var App = require('./app');
 var myapp = new App();
 myapp.start();
@@ -15273,17 +15313,27 @@ module.exports = DeviceModel = Backbone.Model.extend({
 });
 
 },{}],6:[function(require,module,exports){
+var Backbone = require('backbone');
+
+module.exports = UserModel = Backbone.Model.extend({
+    idAttribute: '_id',
+});
+
+},{}],7:[function(require,module,exports){
 var Marionette = require('backbone.marionette');
 
 module.exports = Router = Marionette.AppRouter.extend({
     appRoutes: {
-        ''  : 'home',
+		'' : 'login',
+        'home'  : 'home',
         'details/:id' : 'details',
-        'add' : 'add'
+        'add' : 'add',
+        'login' : 'login',
+        'signup' : 'signup'
     }
 });
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 var Marionette = require('backbone.marionette');
 
 module.exports = AddView = Marionette.ItemView.extend({
@@ -15297,6 +15347,7 @@ module.exports = AddView = Marionette.ItemView.extend({
         var newDevice = {
             name: this.$el.find('#name').val(),
             description: this.$el.find('#description').val(),
+            owner: window.App.data.user,
             state: 'off'
         };
 
@@ -15306,7 +15357,7 @@ module.exports = AddView = Marionette.ItemView.extend({
     }
 });
 
-},{"../../templates/add.hbs":10}],8:[function(require,module,exports){
+},{"../../templates/add.hbs":13}],9:[function(require,module,exports){
 var Marionette = require('backbone.marionette');
 
 module.exports = DeviceDetailsView = Marionette.ItemView.extend({
@@ -15332,7 +15383,7 @@ module.exports = DeviceDetailsView = Marionette.ItemView.extend({
     }
 });
 
-},{"../../templates/device_details.hbs":11}],9:[function(require,module,exports){
+},{"../../templates/device_details.hbs":14}],10:[function(require,module,exports){
 var Marionette = require('backbone.marionette');
 
 var itemView = Marionette.ItemView.extend({
@@ -15373,14 +15424,43 @@ var itemView = Marionette.ItemView.extend({
     }
 });
 
-module.exports = CollectionView = Marionette.CollectionView.extend({
+module.exports = CollectionView = Marionette.CompositeView.extend({
+    template: require('../../templates/devices_container.hbs'),    
     initialize: function() {
         this.listenTo(this.collection, 'change', this.render);
-    },
-    itemView: itemView
+    },    
+    itemView: itemView,
+
+    onRender : function(){
+        this.$el.find('span.email').html(window.App.data.user);
+    }
+
 });
 
-},{"../../templates/device_small.hbs":12}],10:[function(require,module,exports){
+},{"../../templates/device_small.hbs":15,"../../templates/devices_container.hbs":16}],11:[function(require,module,exports){
+var Marionette = require('backbone.marionette');
+var DeviceModel = require('../models/user');
+
+module.exports = DeviceDetailsView = Marionette.ItemView.extend({
+    template: require('../../templates/login.hbs'),
+
+    events: {
+        'submit form': 'save'
+    },    
+
+    save : function(){
+   
+    }
+});
+
+},{"../../templates/login.hbs":17,"../models/user":6}],12:[function(require,module,exports){
+var Marionette = require('backbone.marionette');
+
+module.exports = DeviceDetailsView = Marionette.ItemView.extend({
+    template: require('../../templates/signup.hbs')
+});
+
+},{"../../templates/signup.hbs":18}],13:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -15389,10 +15469,10 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"add_device\">\n    <label for=\"name\">Name:</label> <input type=\"text\" id=\"name\" /><br/>\n    <label for=\"description\">Description:</label> <input type=\"text\" id=\"description\" /><br/>\n\n    <a href=\"#\" class=\"save-button\">Save</a> | <a href=\"#\"><< Back</a>\n</div>\n";
+  return "\n<div class=\"add_device\">\n    <label for=\"name\">Name:</label> <input type=\"text\" id=\"name\" /><br/>\n    <label for=\"description\">Description:</label> <input type=\"text\" id=\"description\" /><br/>    \n    <a href=\"#\" class=\"save-button\">Save</a> | <a href=\"#home\"><< Back</a>\n</div>\n";
   });
 
-},{"hbsfy/runtime":16}],11:[function(require,module,exports){
+},{"hbsfy/runtime":22}],14:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -15417,7 +15497,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":16}],12:[function(require,module,exports){
+},{"hbsfy/runtime":22}],15:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -15442,7 +15522,43 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":16}],13:[function(require,module,exports){
+},{"hbsfy/runtime":22}],16:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = require('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<div class=\"header\">	\n	<a href=\"#add\">Add Device</a>\n	<span class=\"email\"></span>\n	<a href=\"/logout\">Logout</a>\n</div>\n<div class=\"devices-container\">\n	\n</div>\n";
+  });
+
+},{"hbsfy/runtime":22}],17:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = require('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<div class=\"container\">\n\n<div class=\"login-box\">\n\n	<h1><span class=\"fa fa-cloud\"></span> Avya - CoT solutions</h1>\n\n	<!-- LOGIN FORM -->\n	<form action=\"/login\" method=\"post\">\n		<div class=\"form-group\">\n			<label>Email</label>\n			<input type=\"text\" class=\"form-control\" name=\"email\">\n		</div>\n		<div class=\"form-group\">\n			<label>Password</label>\n			<input type=\"password\" class=\"form-control\" name=\"password\">\n		</div>\n\n		<button type=\"submit\" class=\"btn btn-info btn-lg\">Sign in</button>\n		<button type=\"\" class=\"btn btn-warning btn-lg\">Sign Up</button>\n	</form>\n\n	<hr>\n\n	<p>Need an account? <a href=\"#signup\">Signup!</a></p>	\n\n</div>";
+  });
+
+},{"hbsfy/runtime":22}],18:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = require('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<div class=\"col-sm-6 col-sm-offset-3\">\n\n	<h1><span class=\"fa fa-sign-in\"></span> Signup</h1>\n\n	<!-- LOGIN FORM -->\n	<form action=\"/signup\" method=\"post\">\n		<div class=\"form-group\">\n			<label>Email</label>\n			<input type=\"text\" class=\"form-control\" name=\"email\">\n		</div>\n		<div class=\"form-group\">\n			<label>Password</label>\n			<input type=\"password\" class=\"form-control\" name=\"password\">\n		</div>\n\n		<button type=\"submit\" class=\"btn btn-warning btn-lg\">Signup</button>\n	</form>\n\n	<hr>\n\n	<p>Already have an account? <a href=\"#login\">Login</a></p>\n	<p>Or go <a href=\"/\">home</a>.</p>\n\n</div>";
+  });
+
+},{"hbsfy/runtime":22}],19:[function(require,module,exports){
 /*jshint eqnull: true */
 
 module.exports.create = function() {
@@ -15610,7 +15726,7 @@ Handlebars.registerHelper('log', function(context, options) {
 return Handlebars;
 };
 
-},{}],14:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 exports.attach = function(Handlebars) {
 
 // BEGIN(BROWSER)
@@ -15718,7 +15834,7 @@ return Handlebars;
 
 };
 
-},{}],15:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 exports.attach = function(Handlebars) {
 
 var toString = Object.prototype.toString;
@@ -15803,7 +15919,7 @@ Handlebars.Utils = {
 return Handlebars;
 };
 
-},{}],16:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var hbsBase = require("handlebars/lib/handlebars/base");
 var hbsUtils = require("handlebars/lib/handlebars/utils");
 var hbsRuntime = require("handlebars/lib/handlebars/runtime");
@@ -15814,5 +15930,5 @@ hbsRuntime.attach(Handlebars);
 
 module.exports = Handlebars;
 
-},{"handlebars/lib/handlebars/base":13,"handlebars/lib/handlebars/runtime":14,"handlebars/lib/handlebars/utils":15}]},{},[4])
+},{"handlebars/lib/handlebars/base":19,"handlebars/lib/handlebars/runtime":20,"handlebars/lib/handlebars/utils":21}]},{},[4])
 ;
