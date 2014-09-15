@@ -45,7 +45,7 @@ if ('development' == app.get('env')) {
 }
 
 //connect to the db server:
-mongoose.connect('mongodb://localhost/MyApp');
+mongoose.connect('mongodb://laser:laser10@kahana.mongohq.com:10050/vynci-test');
 mongoose.connection.on('open', function() {
     console.log("Connected to Mongoose...");
 
@@ -70,7 +70,7 @@ module.exports.emitSocket = function(status){
     console.log(status);
 }
 
-io.sockets.on('connection', function (socket) {
+io.sockets.on('connection', function (socket) {    
     io.sockets.emit('status', { status: 'hello world' }); // note the use of io.sockets to emit but socket.on to listen
     socket.on('reset', function (data) {
         status = "War is imminent!";

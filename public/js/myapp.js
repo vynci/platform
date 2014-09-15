@@ -15543,7 +15543,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"container\">\n\n<div class=\"login-box\">\n\n	<h1><span class=\"fa fa-cloud\"></span> Avya - CoT solutions</h1>\n\n	<!-- LOGIN FORM -->\n	<form action=\"/login\" method=\"post\">\n		<div class=\"form-group\">\n			<label>Email</label>\n			<input type=\"text\" class=\"form-control\" name=\"email\">\n		</div>\n		<div class=\"form-group\">\n			<label>Password</label>\n			<input type=\"password\" class=\"form-control\" name=\"password\">\n		</div>\n\n		<button type=\"submit\" class=\"btn btn-info btn-lg\">Sign in</button>\n		<button type=\"\" class=\"btn btn-warning btn-lg\">Sign Up</button>\n	</form>\n\n	<hr>\n\n	<p>Need an account? <a href=\"#signup\">Signup!</a></p>	\n\n</div>";
+  return "<div class=\"container\">\n\n<div class=\"login-box\">\n\n	<h1><span class=\"fa fa-cloud\"></span></h1>\n\n	<!-- LOGIN FORM -->\n	<form action=\"/login\" method=\"post\">\n		<div class=\"form-group\">\n			<label>Email</label>\n			<input type=\"text\" class=\"form-control\" name=\"email\">\n		</div>\n		<div class=\"form-group\">\n			<label>Password</label>\n			<input type=\"password\" class=\"form-control\" name=\"password\">\n		</div>\n\n		<button type=\"submit\" class=\"btn btn-info btn-lg\">Sign in</button>\n		<button type=\"\" class=\"btn btn-warning btn-lg\">Sign Up</button>\n	</form>\n\n	<hr>\n\n	<p>Need an account? <a href=\"#signup\">Signup!</a></p>	\n\n</div>";
   });
 
 },{"hbsfy/runtime":22}],18:[function(require,module,exports){
