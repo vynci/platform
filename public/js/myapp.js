@@ -15528,7 +15528,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"header\">	\n\n	<a href=\"#add\" class=\"add-device\"><span class=\"fa fa-plus\"></span> Add Device </a>	\n	<a href=\"#home\" class=\"email col-sm-offset-9\"></a>\n	<a href=\"/logout\" class=\"logout\"> | Signout</a>\n\n</div>\n";
+  return "<div class=\"header\">	\n\n	<a href=\"#add\" class=\"add-device\"><span class=\"fa fa-plus\"></span> Add Device </a>	\n	\n	<a href=\"#home\" class=\"col-sm-offset-9\"><span class=\"fa fa-user\"> </span></a>\n	<a href=\"#home\" class=\"email\"></a>\n	<a href=\"/logout\" class=\"logout\"> | Signout</a>\n\n</div>\n";
   });
 
 },{"hbsfy/runtime":22}],17:[function(require,module,exports){
