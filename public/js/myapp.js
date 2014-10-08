@@ -15279,7 +15279,7 @@ module.exports = Controller = Marionette.Controller.extend({
 
     add: function() {
         App.core.vent.trigger('app:log', 'Controller: "Add Device" route hit.');
-        var view = new AddDeviceView();
+        var view = new AddDeviceView();        
         this.renderView(view);
         window.App.router.navigate('add');
     },
@@ -15346,6 +15346,7 @@ module.exports = AddView = Marionette.ItemView.extend({
         e.preventDefault();
         var newDevice = {
             name: this.$el.find('#name').val(),
+            serial: this.$el.find('#serial').val(),
             description: this.$el.find('#description').val(),
             owner: window.App.data.user,
             state: 'off'
@@ -15432,7 +15433,7 @@ module.exports = CollectionView = Marionette.CompositeView.extend({
     itemView: itemView,
 
     onRender : function(){
-        this.$el.find('span.email').html(window.App.data.user);
+        this.$el.find('a.email').html(window.App.data.user);
     }
 
 });
@@ -15469,7 +15470,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "\n<div class=\"add_device\">\n    <label for=\"name\">Name:</label> <input type=\"text\" id=\"name\" /><br/>\n    <label for=\"description\">Description:</label> <input type=\"text\" id=\"description\" /><br/>    \n    <a href=\"#\" class=\"save-button\">Save</a> | <a href=\"#home\"><< Back</a>\n</div>\n";
+  return "<h2>Add a device</h2>\n\n<div class=\"add_device\">\n	<div class=\"device-input\">\n    	<label for=\"name\">Name:</label> <input type=\"text\" id=\"name\" />\n	</div>\n\n	<div class=\"device-input\">    \n    	<label for=\"serial\">Serial Code:</label> <input type=\"text\" id=\"serial\" />\n    </div>\n\n    <div class=\"device-input\">\n    	<label for=\"description\">Description:</label> <input type=\"text\" id=\"description\" />\n    </div>\n    <a href=\"#\" class=\"save-button\">Save</a> | <a href=\"#home\"><< Back</a>\n</div>\n";
   });
 
 },{"hbsfy/runtime":22}],14:[function(require,module,exports){
@@ -15506,11 +15507,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"device_small\">\n	<div class=\"details\">\n	    <img src=\"http://www.gravatar.com/avatar/";
-  if (stack1 = helpers.gravatar) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.gravatar; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "?d=monsterid&s=45\"/>\n	    <strong>";
+  buffer += "<div class=\"device_small\">\n	<div class=\"details\">\n		<span class=\"fa fa-plug default-device\"></span>\n	    <strong>";
   if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -15531,7 +15528,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"header\">	\n	<a href=\"#add\">Add Device</a>\n	<span class=\"email\"></span>\n	<a href=\"/logout\">Logout</a>\n</div>\n<div class=\"devices-container\">\n	\n</div>\n";
+  return "<div class=\"header\" data-toggle=\"modal\">	\n\n	<a href=\"#add\" class=\"add-device\">Add-Device</a>	\n	<a href=\"#\" class=\"email\"></a>\n	<a href=\"/logout\" class=\"logout\">Signout</a>\n\n</div>\n";
   });
 
 },{"hbsfy/runtime":22}],17:[function(require,module,exports){
@@ -15543,7 +15540,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"container\">\n\n<div class=\"login-box\">\n\n	<h1><span class=\"fa fa-cloud\"></span></h1>\n\n	<!-- LOGIN FORM -->\n	<form action=\"/login\" method=\"post\">\n		<div class=\"form-group\">\n			<label>Email</label>\n			<input type=\"text\" class=\"form-control\" name=\"email\">\n		</div>\n		<div class=\"form-group\">\n			<label>Password</label>\n			<input type=\"password\" class=\"form-control\" name=\"password\">\n		</div>\n\n		<button type=\"submit\" class=\"btn btn-info btn-lg\">Sign in</button>\n		<button type=\"\" class=\"btn btn-warning btn-lg\">Sign Up</button>\n	</form>\n\n	<hr>\n\n	<p>Need an account? <a href=\"#signup\">Signup!</a></p>	\n\n</div>";
+  return "<div class=\"login-box col-sm-4 col-sm-offset-4\">	\n\n		<h2><span class=\"fa fa-cloud\"></span> avayah - Login</h2>\n\n		<!-- LOGIN FORM -->\n		<form action=\"/login\" method=\"post\">\n			<div class=\"form-group\">\n				<label>Email</label>\n				<input type=\"text\" class=\"form-control\" name=\"email\" placeholder=\"Email Address\">\n			</div>\n			<div class=\"form-group\">\n				<label>Password</label>\n				<input type=\"password\" class=\"form-control\" name=\"password\" placeholder=\"Password\">\n			</div>\n\n			<button type=\"submit\" class=\"btn btn-info btn-lg\">Sign in</button>		\n		</form>\n\n		<hr>\n\n		<p>Need an account? <a href=\"#signup\">Signup!</a></p>	\n\n</div>\n";
   });
 
 },{"hbsfy/runtime":22}],18:[function(require,module,exports){
@@ -15555,7 +15552,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"col-sm-6 col-sm-offset-3\">\n\n	<h1><span class=\"fa fa-sign-in\"></span> Signup</h1>\n\n	<!-- LOGIN FORM -->\n	<form action=\"/signup\" method=\"post\">\n		<div class=\"form-group\">\n			<label>Email</label>\n			<input type=\"text\" class=\"form-control\" name=\"email\">\n		</div>\n		<div class=\"form-group\">\n			<label>Password</label>\n			<input type=\"password\" class=\"form-control\" name=\"password\">\n		</div>\n\n		<button type=\"submit\" class=\"btn btn-warning btn-lg\">Signup</button>\n	</form>\n\n	<hr>\n\n	<p>Already have an account? <a href=\"#login\">Login</a></p>\n	<p>Or go <a href=\"/\">home</a>.</p>\n\n</div>";
+  return "<div class=\"login-box col-sm-4 col-sm-offset-4\">\n\n	<h2><span class=\"fa fa-cloud\"></span> avayah - Register</h2>\n\n	<!-- LOGIN FORM -->\n	<form action=\"/signup\" method=\"post\">\n			<div class=\"form-group\">\n				<label>Email</label>\n				<input type=\"text\" class=\"form-control\" name=\"email\" placeholder=\"Email Address\">\n			</div>\n			<div class=\"form-group\">\n				<label>Password</label>\n				<input type=\"password\" class=\"form-control\" name=\"password\" placeholder=\"Password\">\n			</div>\n\n			<button type=\"submit\" class=\"btn btn-warning btn-lg\">Sign up</button>		\n	</form>\n\n	<hr>\n\n	<p>Already have an account? <a href=\"#login\">Login</a></p>	\n\n</div>\n";
   });
 
 },{"hbsfy/runtime":22}],19:[function(require,module,exports){

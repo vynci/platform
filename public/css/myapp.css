@@ -154,16 +154,31 @@ label {
 #content {
   height: 300px;
 }
-.login-box {
-  width: 400px;
+.header {
+  background-color: #5bc0de;
+  border-color: #46b8da;
+  border-radius: 10px;
+  height: 35px;
+  margin-bottom: 15px;
+  word-spacing: 17px;
+  padding-top: 8px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.header a {
+  color: #FFFFFF;
 }
 .login-box button {
-  width: 49%;
+  width: 100%;
+}
+.device-input {
+  margin-bottom: 10px;
 }
 .device_small,
 .device_full {
+  border-radius: 10px;
   cursor: pointer;
-  width: 260px;
+  width: 274px;
   float: left;
   border: solid 1px #c0c0c0;
   padding: 5px;
@@ -183,6 +198,7 @@ label {
 }
 .device_small .onoffswitch,
 .device_full .onoffswitch {
+  border-radius: 10px;
   position: relative;
   cursor: pointer;
   background: #EEEEEE;
@@ -191,9 +207,12 @@ label {
 }
 .device_small .active-switch,
 .device_full .active-switch {
-  background: #2FFF60;
+  background: #99FF99;
 }
-.device_small img {
+.device_small .default-device,
+.device_full .default-device {
+  font-size: 35px;
+  color: #999;
   float: left;
   width: 45px;
   height: 45px;

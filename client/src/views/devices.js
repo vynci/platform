@@ -46,7 +46,7 @@ module.exports = CollectionView = Marionette.CompositeView.extend({
     itemView: itemView,
 
     onRender : function(){
-        this.$el.find('span.email').html(window.App.data.user);
+        this.$el.find('a.email').html(window.App.data.user);
     }
 
 });

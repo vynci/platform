@@ -46,7 +46,7 @@ module.exports = Controller = Marionette.Controller.extend({
 
     add: function() {
         App.core.vent.trigger('app:log', 'Controller: "Add Device" route hit.');
-        var view = new AddDeviceView();
+        var view = new AddDeviceView();        
         this.renderView(view);
         window.App.router.navigate('add');
     },
