@@ -11,7 +11,7 @@ var itemView = Marionette.ItemView.extend({
     },
 
     onRender: function() {
-        if(this.model.get('state') === 'on'){
+        if(this.model.get('state') === 0){
             this.$el.find('div.onoffswitch').addClass('active-switch');
             this.$el.find('div.onoffswitch').html('on');
         } else { 
@@ -21,14 +21,14 @@ var itemView = Marionette.ItemView.extend({
     },  
 
     updateState: function() {        
-        if(this.model.get('state') === 'on'){
+        if(this.model.get('state') === 0){
             this.$el.find('div.onoffswitch').addClass('active-switch');
             this.$el.find('div.onoffswitch').html('off');
-            this.model.save({state:'off'});
+            this.model.save({state:1});
         } else { 
             this.$el.find('div.onoffswitch').removeAttr('active-switch');
             this.$el.find('div.onoffswitch').html('on');
-            this.model.save({state:'on'});
+            this.model.save({state:0});
         }  
     },
 
@@ -39,7 +39,7 @@ var itemView = Marionette.ItemView.extend({
 });
 
 module.exports = CollectionView = Marionette.CompositeView.extend({
-    template: require('../../templates/devices_container.hbs'),    
+    template: require('../../templates/devices_container.hbs'),       
     initialize: function() {
         this.listenTo(this.collection, 'change', this.render);
     },    

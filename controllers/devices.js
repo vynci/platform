@@ -31,10 +31,11 @@ module.exports = {
 
     add: function(req, res) {
         var newDevice = new models.Device(req.body);
-        newDevice.gravatar = md5(newDevice.email);
+        newDevice.info = req.body.info;
+        console.log(newDevice)      
         newDevice.save(function(err, device) {
             if (err) {
-                res.json({error: 'Error adding device.'});
+                res.json({error: err});
             } else {
                 res.json(device);
             }

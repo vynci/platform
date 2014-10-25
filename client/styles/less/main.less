@@ -17,7 +17,8 @@ label { display: block; float: left; width: 120px; clear: left; }
 	height: 35px;
 	margin-bottom: 15px;		
 	padding-top: 8px;	
-	padding-left: 20px;
+	padding-right: 20px;
+	text-align: right;
 
 	a {
 		color : #FFFFFF;
@@ -60,7 +61,7 @@ label { display: block; float: left; width: 120px; clear: left; }
 		cursor: pointer;
 		background: #EEEEEE;
 		width:100%;		  
-		text-align: center;
+		text-align: center;		
 	}
 
 	.active-switch{
@@ -81,7 +82,17 @@ label { display: block; float: left; width: 120px; clear: left; }
 .device_full { float: none; height: 325px;}
 .device_full img { margin-left: 5px; }
 
-.add_device label { display: inline-block; width: 120px; float: left; clear: left; }
+.add_device {
+	label { 
+		display: inline-block; 
+		width: 120px; 
+		float: left; 
+		clear: left; 
+	}
+	.switch-box {
+		width: 50px !important;
+	}
+}
 
 #output {margin-top: 2em; font-size: .9em; border: solid 1px #c0c0c0; background-color: #f0f0f0; padding: 5px;}
 #output li {margin-left: 30px; list-style-type: decimal;}

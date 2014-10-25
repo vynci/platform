@@ -15345,11 +15345,14 @@ module.exports = AddView = Marionette.ItemView.extend({
     save: function(e) {
         e.preventDefault();
         var newDevice = {
-            name: this.$el.find('#name').val(),
-            serial: this.$el.find('#serial').val(),
+            name: this.$el.find('#name').val(),            
             description: this.$el.find('#description').val(),
             owner: window.App.data.user,
-            state: 'off'
+            state: 1,
+            info: {
+                serial: this.$el.find('#serial').val(),
+                switchNum : parseInt( this.$el.find('#switch-number').val() )
+            }
         };
 
         window.App.data.devices.create(newDevice);
@@ -15398,7 +15401,7 @@ var itemView = Marionette.ItemView.extend({
     },
 
     onRender: function() {
-        if(this.model.get('state') === 'on'){
+        if(this.model.get('state') === 0){
             this.$el.find('div.onoffswitch').addClass('active-switch');
             this.$el.find('div.onoffswitch').html('on');
         } else { 
@@ -15408,14 +15411,14 @@ var itemView = Marionette.ItemView.extend({
     },  
 
     updateState: function() {        
-        if(this.model.get('state') === 'on'){
+        if(this.model.get('state') === 0){
             this.$el.find('div.onoffswitch').addClass('active-switch');
             this.$el.find('div.onoffswitch').html('off');
-            this.model.save({state:'off'});
+            this.model.save({state:1});
         } else { 
             this.$el.find('div.onoffswitch').removeAttr('active-switch');
             this.$el.find('div.onoffswitch').html('on');
-            this.model.save({state:'on'});
+            this.model.save({state:0});
         }  
     },
 
@@ -15426,7 +15429,7 @@ var itemView = Marionette.ItemView.extend({
 });
 
 module.exports = CollectionView = Marionette.CompositeView.extend({
-    template: require('../../templates/devices_container.hbs'),    
+    template: require('../../templates/devices_container.hbs'),       
     initialize: function() {
         this.listenTo(this.collection, 'change', this.render);
     },    
@@ -15470,7 +15473,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<h2>Add a device</h2>\n\n<div class=\"add_device\">\n	<div class=\"device-input\">\n    	<label for=\"name\">Name:</label> <input type=\"text\" id=\"name\" />\n	</div>\n\n	<div class=\"device-input\">    \n    	<label for=\"serial\">Serial Code:</label> <input type=\"text\" id=\"serial\" />\n    </div>\n\n    <div class=\"device-input\">\n    	<label for=\"description\">Description:</label> <input type=\"text\" id=\"description\" />\n    </div>\n    <a href=\"#\" class=\"save-button\">Save</a> | <a href=\"#home\"><< Back</a>\n</div>\n";
+  return "<h2>Add a device</h2>\n\n<div class=\"add_device\">\n	<div class=\"device-input\">\n    	<label for=\"name\">Name:</label> <input type=\"text\" id=\"name\" />\n	</div>\n\n	<div class=\"device-input\">    \n    	<label for=\"serial\">Serial Code:</label> <input type=\"text\" id=\"serial\" />\n    </div>\n\n    <div class=\"device-input\">\n        <label for=\"switch-number\">Switch Number:</label>\n        <select class=\"form-control switch-box\" id=\"switch-number\">\n            <option value=\"1\">1</option>\n            <option value=\"2\">2</option>\n            <option value=\"3\">3</option>\n            <option value=\"4\">4</option>            \n        </select>        \n    </div>\n\n    <div class=\"device-input\">\n        <label for=\"description\">Description:</label> <input type=\"text\" id=\"description\" />\n    </div>\n\n    <a href=\"#\" class=\"save-button\">Save</a> | <a href=\"#home\"><< Back</a>\n</div>\n";
   });
 
 },{"hbsfy/runtime":22}],14:[function(require,module,exports){
@@ -15528,7 +15531,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"header\">	\n\n	<a href=\"#add\" class=\"add-device\"><span class=\"fa fa-plus\"></span> Add Device </a>	\n	\n	<a href=\"#home\" class=\"col-sm-offset-9\"><span class=\"fa fa-user\"> </span></a>\n	<a href=\"#home\" class=\"email\"></a>\n	<a href=\"/logout\" class=\"logout\"> | Signout</a>\n\n</div>\n";
+  return "<div class=\"header\">	\n\n	<a href=\"#add\" class=\"add-device\"><span class=\"fa fa-plus\"></span> Add Device | </a>	\n	\n	<a href=\"#home\" class=\"\"><span class=\"fa fa-user\"> </span></a>\n	<a href=\"#home\" class=\"email\"></a>\n	<a href=\"/logout\" class=\"logout\"> | Signout</a>\n\n</div>\n";
   });
 
 },{"hbsfy/runtime":22}],17:[function(require,module,exports){
@@ -15540,7 +15543,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"login-box col-sm-4 col-sm-offset-4\">	\n\n		<h2><span class=\"fa fa-cloud\"></span> avayah - Login</h2>\n\n		<!-- LOGIN FORM -->\n		<form action=\"/login\" method=\"post\">\n			<div class=\"form-group\">\n				<label>Email</label>\n				<input type=\"text\" class=\"form-control\" name=\"email\" placeholder=\"Email Address\">\n			</div>\n			<div class=\"form-group\">\n				<label>Password</label>\n				<input type=\"password\" class=\"form-control\" name=\"password\" placeholder=\"Password\">\n			</div>\n\n			<button type=\"submit\" class=\"btn btn-info btn-lg\">Sign in</button>		\n		</form>\n\n		<hr>\n\n		<p>Need an account? <a href=\"#signup\">Signup!</a></p>	\n\n</div>\n";
+  return "<div class=\"login-box col-sm-4 col-sm-offset-4\">	\n\n		<h2><span class=\"fa fa-cloud\"></span> avayah - Login</h2>\n\n		<!-- LOGIN FORM -->\n		<form action=\"/login\" method=\"post\">\n			<div class=\"form-group\">				\n				<input type=\"text\" class=\"form-control\" name=\"email\" placeholder=\"Email Address\">\n			</div>\n			<div class=\"form-group\">				\n				<input type=\"password\" class=\"form-control\" name=\"password\" placeholder=\"Password\">\n			</div>\n\n			<button type=\"submit\" class=\"btn btn-info btn-lg\">Sign in</button>		\n		</form>\n\n		<hr>\n\n		<p>Need an account? <a href=\"#signup\">Signup!</a></p>	\n\n</div>\n";
   });
 
 },{"hbsfy/runtime":22}],18:[function(require,module,exports){
@@ -15552,7 +15555,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"login-box col-sm-4 col-sm-offset-4\">\n\n	<h2><span class=\"fa fa-cloud\"></span> avayah - Register</h2>\n\n	<!-- LOGIN FORM -->\n	<form action=\"/signup\" method=\"post\">\n			<div class=\"form-group\">\n				<label>Email</label>\n				<input type=\"text\" class=\"form-control\" name=\"email\" placeholder=\"Email Address\">\n			</div>\n			<div class=\"form-group\">\n				<label>Password</label>\n				<input type=\"password\" class=\"form-control\" name=\"password\" placeholder=\"Password\">\n			</div>\n\n			<button type=\"submit\" class=\"btn btn-warning btn-lg\">Sign up</button>		\n	</form>\n\n	<hr>\n\n	<p>Already have an account? <a href=\"#login\">Login</a></p>	\n\n</div>\n";
+  return "<div class=\"login-box col-sm-4 col-sm-offset-4\">\n\n	<h2><span class=\"fa fa-cloud\"></span> avayah - Register</h2>\n\n	<!-- LOGIN FORM -->\n	<form action=\"/signup\" method=\"post\">\n			<div class=\"form-group\">				\n				<input type=\"text\" class=\"form-control\" name=\"email\" placeholder=\"Email Address\">\n			</div>\n			<div class=\"form-group\">				\n				<input type=\"password\" class=\"form-control\" name=\"password\" placeholder=\"Password\">\n			</div>\n\n			<button type=\"submit\" class=\"btn btn-warning btn-lg\">Sign up</button>		\n	</form>\n\n	<hr>\n\n	<p>Already have an account? <a href=\"#login\">Login</a></p>	\n\n</div>\n";
   });
 
 },{"hbsfy/runtime":22}],19:[function(require,module,exports){

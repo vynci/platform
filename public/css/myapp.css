@@ -161,7 +161,8 @@ label {
   height: 35px;
   margin-bottom: 15px;
   padding-top: 8px;
-  padding-left: 20px;
+  padding-right: 20px;
+  text-align: right;
 }
 .header a {
   color: #FFFFFF;
@@ -228,6 +229,9 @@ label {
   width: 120px;
   float: left;
   clear: left;
+}
+.add_device .switch-box {
+  width: 50px !important;
 }
 #output {
   margin-top: 2em;
