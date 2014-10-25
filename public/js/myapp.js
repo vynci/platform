@@ -15410,15 +15410,22 @@ var itemView = Marionette.ItemView.extend({
         }        
     },  
 
-    updateState: function() {        
+    updateState: function() {
+        var that = this;
         if(this.model.get('state') === 0){
-            this.$el.find('div.onoffswitch').addClass('active-switch');
-            this.$el.find('div.onoffswitch').html('off');
-            this.model.save({state:1});
+            this.model.save({state:1}, {
+                success : function () {
+                    that.$el.find('div.onoffswitch').addClass('active-switch');
+                    that.$el.find('div.onoffswitch').html('off');  
+                }
+            } );
         } else { 
-            this.$el.find('div.onoffswitch').removeAttr('active-switch');
-            this.$el.find('div.onoffswitch').html('on');
-            this.model.save({state:0});
+            this.model.save({state:0}, {
+                success : function () {
+                    that.$el.find('div.onoffswitch').removeAttr('active-switch');
+                    that.$el.find('div.onoffswitch').html('on');                    
+                }
+            } );
         }  
     },
 
