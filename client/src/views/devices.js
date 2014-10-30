@@ -1,9 +1,17 @@
 var Marionette = require('backbone.marionette');
+var io = require('../../requires/socket.io-client/js/socket.io');
+var socket = io('http://10.1.2.4:3300');
+
+socket.emit('user-info', 'user data');
 
 var itemView = Marionette.ItemView.extend({
     template: require('../../templates/device_small.hbs'),
     initialize: function() {
+        console.log(this.model);
         this.listenTo(this.model, 'change', this.render);    
+        socket.on('device-status', function ( data ) { 
+            console.log(data);
+        });
     },
     events: {
         'click .details': 'showDetails',
@@ -27,15 +35,13 @@ var itemView = Marionette.ItemView.extend({
                 success : function () {
                     that.$el.find('div.onoffswitch').addClass('active-switch');
                     that.$el.find('div.onoffswitch').html('off');  
-                    console.log('success!');
                 }
             } );
         } else { 
             this.model.save({state:0}, {
                 success : function () {
                     that.$el.find('div.onoffswitch').removeAttr('active-switch');
-                    that.$el.find('div.onoffswitch').html('on');                    
-                    console.log('success!');
+                    that.$el.find('div.onoffswitch').html('on');                                        
                 }
             } );
         }  

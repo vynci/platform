@@ -75,7 +75,7 @@ module.exports.emitSocket = function(status){
 }
 
 io.sockets.on('connection', function (socket) { 
-
+    
     socket.on('device-info', function (data) {        
         socket.deviceId = data;
         deviceClients.push(socket);   
@@ -85,14 +85,15 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('user-info', function (data) {        
         socket.userId = data;
-        userClients.push(socket);   
+        userClients.push(socket);        
         console.log('client: ' + socket.userId + ' connected');
         console.log('number of users: ' + userClients.length);
+        socket.emit('device-status', 'device status!')
     });
 
     socket.on('device-update', function (data) {        
         matchUserClient( data );
-    });      
+    });
 
     socket.on('disconnect', function() {
         var index = deviceClients.indexOf(socket);

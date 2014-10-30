@@ -52,7 +52,7 @@ module.exports = function(grunt) {
                                 backbone: 'Backbone',
                                 underscore: '_'
                             }
-                        }
+                        }                  
                     }
                 }
             },
