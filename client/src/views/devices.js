@@ -3,7 +3,7 @@ var Marionette = require('backbone.marionette');
 var itemView = Marionette.ItemView.extend({
     template: require('../../templates/device_small.hbs'),
     initialize: function() {
-        this.listenTo(this.model, 'change', this.render);
+        this.listenTo(this.model, 'change', this.render);    
     },
     events: {
         'click .details': 'showDetails',
@@ -27,6 +27,7 @@ var itemView = Marionette.ItemView.extend({
                 success : function () {
                     that.$el.find('div.onoffswitch').addClass('active-switch');
                     that.$el.find('div.onoffswitch').html('off');  
+                    console.log('success!');
                 }
             } );
         } else { 
@@ -34,6 +35,7 @@ var itemView = Marionette.ItemView.extend({
                 success : function () {
                     that.$el.find('div.onoffswitch').removeAttr('active-switch');
                     that.$el.find('div.onoffswitch').html('on');                    
+                    console.log('success!');
                 }
             } );
         }  

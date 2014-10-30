@@ -176,7 +176,6 @@ label {
 .device_small,
 .device_full {
   border-radius: 10px;
-  cursor: pointer;
   width: 274px;
   float: left;
   border: solid 1px #c0c0c0;
@@ -191,17 +190,13 @@ label {
   height: 45px;
   margin-bottom: 5px;
 }
-.device_small .details:hover,
-.device_full .details:hover {
-  background: #F7F7F7;
-}
 .device_small .onoffswitch,
 .device_full .onoffswitch {
   border-radius: 10px;
   position: relative;
   cursor: pointer;
   background: #EEEEEE;
-  width: 100%;
+  width: 30%;
   text-align: center;
 }
 .device_small .active-switch,
@@ -210,9 +205,9 @@ label {
 }
 .device_small .default-device,
 .device_full .default-device {
-  font-size: 35px;
+  font-size: 60px;
   color: #999;
-  float: left;
+  float: right;
   width: 45px;
   height: 45px;
   margin-right: 5px;

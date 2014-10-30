@@ -45,8 +45,8 @@ if ('development' == app.get('env')) {
 }
 
 //connect to the db server:
-mongoose.connect('mongodb://laser:laser10@kahana.mongohq.com:10050/vynci-test');
-//mongoose.connect('mongodb://localhost/test-avayah2');
+//mongoose.connect('mongodb://laser:laser10@kahana.mongohq.com:10050/vynci-test');
+mongoose.connect('mongodb://localhost/test-avayah2');
 mongoose.connection.on('open', function() {
     console.log("Connected to Mongoose...");
 });
@@ -62,9 +62,11 @@ var server = http.createServer(app).listen(app.get('port'), function() {
 });
 
 var io = socket.listen(server);
-var clients = [];
-module.exports.emitSocket = function(status){    
-    _.each(clients, function( client ) {
+var deviceClients = [];
+var userClients = [];
+
+module.exports.emitSocket = function(status){  
+    _.each(deviceClients, function( client ) {
         if ( client.deviceId == status.info[0].serial) {
             client.emit('status', status);
         }
@@ -76,17 +78,37 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('device-info', function (data) {        
         socket.deviceId = data;
-        clients.push(socket);   
+        deviceClients.push(socket);   
         console.log('client: ' + socket.deviceId + ' connected');
-        console.log('number of devices: ' + clients.length);
+        console.log('number of devices: ' + deviceClients.length);
     });
 
+    socket.on('user-info', function (data) {        
+        socket.userId = data;
+        userClients.push(socket);   
+        console.log('client: ' + socket.userId + ' connected');
+        console.log('number of users: ' + userClients.length);
+    });
+
+    socket.on('device-update', function (data) {        
+        matchUserClient( data );
+    });      
+
     socket.on('disconnect', function() {
-        var index = clients.indexOf(socket);
+        var index = deviceClients.indexOf(socket);
         if (index != -1) {
-            clients.splice(index, 1);
+            deviceClients.splice(index, 1);
             console.info('Client gone (id=' + socket.id + ').');
         }
     });
 
 });
+
+function matchUserClient(data) {
+    console.log('Matching Client');
+    _.each(userClients, function( client ) {
+        if ( client.userId == data.owner) {
+            client.emit('status', data);
+        }        
+    } );    
+}

@@ -57,7 +57,6 @@ App.prototype.start = function(){
 
     App.core.vent.bind('app:login', function(msg) {
         console.log('hello login');
-
     });
 
     App.core.start();

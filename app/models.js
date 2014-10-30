@@ -4,7 +4,8 @@ var mongoose = require('mongoose'),
 
 var info = new Schema( {
 	serial    : { type: String }, 
-	switchNum : { type: Number }
+	switchNum : { type: Number },
+    flag      : { type: String }
 } );
 
 var Device = new Schema({

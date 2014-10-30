@@ -15214,7 +15214,6 @@ App.prototype.start = function(){
 
     App.core.vent.bind('app:login', function(msg) {
         console.log('hello login');
-
     });
 
     App.core.start();
@@ -15237,6 +15236,8 @@ var Marionette = require('backbone.marionette'),
     LoginView = require('./views/login'),
     SignUpView = require('./views/signup'),
     AddDeviceView = require('./views/add');
+
+var MyApp = new Backbone.Router();    
 
 module.exports = Controller = Marionette.Controller.extend({
     initialize: function() {
@@ -15261,13 +15262,19 @@ module.exports = Controller = Marionette.Controller.extend({
         window.App.router.navigate('#signup');
     },    
 
-    home: function() {
-        console.log('home!');
+    home: function() {        
+        var dataDevices = window.App.data.devices;
         App.core.vent.trigger('app:login');
-        window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });        
-        var view = window.App.views.devicesView;
-        this.renderView(view);
-        window.App.router.navigate('#home');
+        
+        if(dataDevices === undefined){
+            MyApp.navigate('#login', {trigger: true});   
+        }
+        else{
+            window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });        
+            var view = window.App.views.devicesView;
+            this.renderView(view);
+            window.App.router.navigate('#home');  
+        }        
     },
 
     details: function(id) {
@@ -15278,10 +15285,18 @@ module.exports = Controller = Marionette.Controller.extend({
     },
 
     add: function() {
-        App.core.vent.trigger('app:log', 'Controller: "Add Device" route hit.');
-        var view = new AddDeviceView();        
-        this.renderView(view);
-        window.App.router.navigate('add');
+        var dataDevices = window.App.data.devices;
+
+        if(dataDevices === undefined){
+            MyApp.navigate('#login', {trigger: true});   
+        }        
+        else{
+            App.core.vent.trigger('app:log', 'Controller: "Add Device" route hit.');
+            var view = new AddDeviceView();        
+            this.renderView(view);
+            window.App.router.navigate('add');            
+        }
+
     },
 
     renderView: function(view) {
@@ -15393,7 +15408,7 @@ var Marionette = require('backbone.marionette');
 var itemView = Marionette.ItemView.extend({
     template: require('../../templates/device_small.hbs'),
     initialize: function() {
-        this.listenTo(this.model, 'change', this.render);
+        this.listenTo(this.model, 'change', this.render);    
     },
     events: {
         'click .details': 'showDetails',
@@ -15417,6 +15432,7 @@ var itemView = Marionette.ItemView.extend({
                 success : function () {
                     that.$el.find('div.onoffswitch').addClass('active-switch');
                     that.$el.find('div.onoffswitch').html('off');  
+                    console.log('success!');
                 }
             } );
         } else { 
@@ -15424,6 +15440,7 @@ var itemView = Marionette.ItemView.extend({
                 success : function () {
                     that.$el.find('div.onoffswitch').removeAttr('active-switch');
                     that.$el.find('div.onoffswitch').html('on');                    
+                    console.log('success!');
                 }
             } );
         }  
@@ -15480,7 +15497,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<h2>Add a device</h2>\n\n<div class=\"add_device\">\n	<div class=\"device-input\">\n    	<label for=\"name\">Name:</label> <input type=\"text\" id=\"name\" />\n	</div>\n\n	<div class=\"device-input\">    \n    	<label for=\"serial\">Serial Code:</label> <input type=\"text\" id=\"serial\" />\n    </div>\n\n    <div class=\"device-input\">\n        <label for=\"switch-number\">Switch Number:</label>\n        <select class=\"form-control switch-box\" id=\"switch-number\">\n            <option value=\"1\">1</option>\n            <option value=\"2\">2</option>\n            <option value=\"3\">3</option>\n            <option value=\"4\">4</option>            \n        </select>        \n    </div>\n\n    <div class=\"device-input\">\n        <label for=\"description\">Description:</label> <input type=\"text\" id=\"description\" />\n    </div>\n\n    <a href=\"#\" class=\"save-button\">Save</a> | <a href=\"#home\"><< Back</a>\n</div>\n";
+  return "<h2>Add a device</h2>\n\n<div class=\"add_device\">\n	<div class=\"device-input\">\n    	<label for=\"name\">Name:</label> <input type=\"text\" id=\"name\" />\n	</div>\n\n	<div class=\"device-input\">    \n    	<label for=\"serial\">Serial Code:</label> <input type=\"text\" id=\"serial\" />\n    </div>\n\n    <div class=\"device-input\">\n        <label for=\"switch-number\">Switch Number:</label>\n        <select class=\"form-control switch-box\" id=\"switch-number\">\n            <option value=\"1\">1</option>\n            <option value=\"2\">2</option>\n            <option value=\"3\">3</option>\n            <option value=\"4\">4</option>\n            <option value=\"5\">5</option>\n            <option value=\"6\">6</option>\n            <option value=\"7\">7</option>            \n            <option value=\"8\">8</option>\n        </select>        \n    </div>\n\n    <div class=\"device-input\">\n        <label for=\"description\">Description:</label> <input type=\"text\" id=\"description\" />\n    </div>\n\n    <a href=\"#\" class=\"save-button\">Save</a> | <a href=\"#home\"><< Back</a>\n</div>\n";
   });
 
 },{"hbsfy/runtime":22}],14:[function(require,module,exports){
@@ -15517,7 +15534,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"device_small\">\n	<div class=\"details\">\n		<span class=\"fa fa-plug default-device\"></span>\n	    <strong>";
+  buffer += "<div class=\"device_small\">\n	<div class=\"details\">\n		<span class=\"fa fa-power-off default-device\"></span>\n	    <strong>";
   if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -15525,7 +15542,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (stack1 = helpers.description) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.description; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "<p>\n	</div>    	\n	<div class=\"onoffswitch\">Off\n	</div>\n</div>\n";
+    + "<p>\n	</div>    	\n	<div class=\"onoffswitch\">Info\n	</div>\n</div>\n";
   return buffer;
   });
 

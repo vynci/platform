@@ -5,6 +5,8 @@ var Marionette = require('backbone.marionette'),
     SignUpView = require('./views/signup'),
     AddDeviceView = require('./views/add');
 
+var MyApp = new Backbone.Router();    
+
 module.exports = Controller = Marionette.Controller.extend({
     initialize: function() {
         App.core.vent.trigger('app:log', 'Controller: Initializing');
@@ -28,13 +30,19 @@ module.exports = Controller = Marionette.Controller.extend({
         window.App.router.navigate('#signup');
     },    
 
-    home: function() {
-        console.log('home!');
+    home: function() {        
+        var dataDevices = window.App.data.devices;
         App.core.vent.trigger('app:login');
-        window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });        
-        var view = window.App.views.devicesView;
-        this.renderView(view);
-        window.App.router.navigate('#home');
+        
+        if(dataDevices === undefined){
+            MyApp.navigate('#login', {trigger: true});   
+        }
+        else{
+            window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });        
+            var view = window.App.views.devicesView;
+            this.renderView(view);
+            window.App.router.navigate('#home');  
+        }        
     },
 
     details: function(id) {
@@ -45,10 +53,18 @@ module.exports = Controller = Marionette.Controller.extend({
     },
 
     add: function() {
-        App.core.vent.trigger('app:log', 'Controller: "Add Device" route hit.');
-        var view = new AddDeviceView();        
-        this.renderView(view);
-        window.App.router.navigate('add');
+        var dataDevices = window.App.data.devices;
+
+        if(dataDevices === undefined){
+            MyApp.navigate('#login', {trigger: true});   
+        }        
+        else{
+            App.core.vent.trigger('app:log', 'Controller: "Add Device" route hit.');
+            var view = new AddDeviceView();        
+            this.renderView(view);
+            window.App.router.navigate('add');            
+        }
+
     },
 
     renderView: function(view) {
