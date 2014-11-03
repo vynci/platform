@@ -11,7 +11,7 @@ var flash        = require('connect-flash');
 var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
-var session      = require('express-session');    
+var session      = require('express-session');
 var _            = require('underscore');
 
 app.set('port', process.env.PORT || 3300);
@@ -45,8 +45,8 @@ if ('development' == app.get('env')) {
 }
 
 //connect to the db server:
-//mongoose.connect('mongodb://laser:laser10@kahana.mongohq.com:10050/vynci-test');
-mongoose.connect('mongodb://localhost/test-avayah2');
+mongoose.connect('mongodb://laser:laser10@kahana.mongohq.com:10050/vynci-test');
+//mongoose.connect('mongodb://localhost/test-avayah2');
 mongoose.connection.on('open', function() {
     console.log("Connected to Mongoose...");
 });
@@ -65,7 +65,7 @@ var io = socket.listen(server);
 var deviceClients = [];
 var userClients = [];
 
-module.exports.emitSocket = function(status){  
+module.exports.emitSocket = function(status){
     _.each(deviceClients, function( client ) {
         if ( client.deviceId == status.info[0].serial) {
             client.emit('status', status);
@@ -74,24 +74,24 @@ module.exports.emitSocket = function(status){
     console.log(status);
 }
 
-io.sockets.on('connection', function (socket) { 
-    
-    socket.on('device-info', function (data) {        
+io.sockets.on('connection', function (socket) {
+
+    socket.on('device-info', function (data) {
         socket.deviceId = data;
-        deviceClients.push(socket);   
+        deviceClients.push(socket);
         console.log('client: ' + socket.deviceId + ' connected');
         console.log('number of devices: ' + deviceClients.length);
     });
 
-    socket.on('user-info', function (data) {        
+    socket.on('user-info', function (data) {
         socket.userId = data;
-        userClients.push(socket);        
+        userClients.push(socket);
         console.log('client: ' + socket.userId + ' connected');
         console.log('number of users: ' + userClients.length);
         socket.emit('device-status', 'device status!')
     });
 
-    socket.on('device-update', function (data) {        
+    socket.on('device-update', function (data) {
         matchUserClient( data );
     });
 
@@ -110,6 +110,6 @@ function matchUserClient(data) {
     _.each(userClients, function( client ) {
         if ( client.userId == data.owner) {
             client.emit('status', data);
-        }        
-    } );    
+        }
+    } );
 }
