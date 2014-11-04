@@ -1,13 +1,13 @@
 var Marionette = require('backbone.marionette');
+var io = require('../../requires/socket.io-client/js/socket.io');
+var socket = io(window.location.host);
 
 var itemView = Marionette.ItemView.extend({
     template: require('../../templates/device_small.hbs'),
     initialize: function() {
-        console.log(this.model);
-        this.listenTo(this.model, 'change', this.render);
-        // socket.on('device-status', function ( data ) {
-        //     console.log(data);
-        // });
+        socket.on('device-status', function ( data ) {
+            console.log(data);
+        });
     },
     events: {
         'click .details': 'showDetails',
@@ -52,7 +52,7 @@ var itemView = Marionette.ItemView.extend({
 module.exports = CollectionView = Marionette.CompositeView.extend({
     template: require('../../templates/devices_container.hbs'),
     initialize: function() {
-        this.listenTo(this.collection, 'change', this.render);
+      socket.emit('user-info', 'user data');
     },
     itemView: itemView,
 

@@ -96,11 +96,20 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function() {
-        var index = deviceClients.indexOf(socket);
+        var index  = deviceClients.indexOf(socket);
+        var index2 = userClients.indexOf(socket);
+
         if (index != -1) {
             deviceClients.splice(index, 1);
-            console.info('Client gone (id=' + socket.id + ').');
+            console.info('Device Client gone (id=' + socket.id + ').');
         }
+
+        if (index2 != -1) {
+            userClients.splice(index2, 1);
+            console.info('User Client gone (id=' + socket.id + ').');
+        }
+
+
     });
 
 });
