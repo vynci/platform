@@ -15211,7 +15211,7 @@ App.prototype.start = function(){
         App.data.user = '';
 
         $.get( '/api/auth' )
-          .done(function( data ) {            
+          .done(function( data ) {
             if(typeof data === 'object' && data.local.email){
                 App.data.user = data.local.email;
                 var devices = new DevicesCollection();
@@ -15220,13 +15220,13 @@ App.prototype.start = function(){
                         App.data.devices = devices;
                         App.core.vent.trigger('app:start');
                     },
-                    url: '/api/devicesByOwner/' + data.local.email                    
-                });                 
+                    url: '/api/devicesByOwner/' + data.local.email
+                });
             }
             else{
                 App.core.vent.trigger('app:start');
             }
-           
+
           });
         // load up some initial data:
         //
@@ -15424,7 +15424,7 @@ module.exports = DeviceDetailsView = Marionette.ItemView.extend({
     },
 
     goBack: function(e) {
-        e.preventDefault();
+        e.preventDefault();        
         window.App.controller.home();
     },
     deleteDevice: function(e) {
@@ -15447,59 +15447,77 @@ var socket = io(window.location.host);
 var itemView = Marionette.ItemView.extend({
     template: require('../../templates/device_small.hbs'),
     initialize: function() {
-        socket.on('device-status', function ( data ) {
-            console.log(data);
-        });
+      var that = this;
+      console.log('init!');
+      this.listenTo(this.model, 'destroy', this.remove);
+      socket.on('device-status', function ( data ) {
+          that.updateStatus( data );
+      });
     },
     events: {
-        'click .details': 'showDetails',
-        'click div.onoffswitch' : 'updateState'
+        'click span.info': 'showDetails',
+        'click span.default-device' : 'updateState'
     },
 
     onRender: function() {
-        if(this.model.get('state') === 0){
-            this.$el.find('div.onoffswitch').addClass('active-switch');
-            this.$el.find('div.onoffswitch').html('on');
-        } else {
-            this.$el.find('div.onoffswitch').removeAttr('active-switch');
-            this.$el.find('div.onoffswitch').html('off');
-        }
+      console.log(this.model.get('info')[0].serial);
+      this.$el.find('span.default-device').hide();
     },
 
     updateState: function() {
-        var that = this;
-        if(this.model.get('state') === 0){
-            this.model.save({state:1}, {
-                success : function () {
-                    that.$el.find('div.onoffswitch').addClass('active-switch');
-                    that.$el.find('div.onoffswitch').html('off');
-                }
-            } );
-        } else {
-            this.model.save({state:0}, {
-                success : function () {
-                    that.$el.find('div.onoffswitch').removeAttr('active-switch');
-                    that.$el.find('div.onoffswitch').html('on');
-                }
-            } );
+      socket.emit('user-update', {
+        'owner':'testfoo@gmail.com',
+        'state':1,
+        'info': this.model.get( 'info' )
+      });
+    },
+
+    updateStatus: function(data) {
+      console.log(data);
+      if(data.status === 'online' && data.serial === this.model.get('info')[0].serial){
+        this.$el.find('div.onoffswitch').addClass('active-switch');
+        this.$el.find('div.onoffswitch').html('online');
+        this.$el.find('span.default-device').show();
+
+        if(data.state === 0 && data.switchNum === this.model.get('info')[0].switchNum){
+          this.$el.find('span.default-device').addClass('active-switch');
         }
+        if(data.state === 1 && data.switchNum === this.model.get('info')[0].switchNum){
+          this.$el.find('span.default-device').removeClass('active-switch');
+        }
+      }
+      else{
+        this.$el.find('div.onoffswitch').removeClass('active-switch');
+        this.$el.find('div.onoffswitch').html('offline');
+        this.$el.find('span.default-device').hide();
+      }
     },
 
     showDetails: function() {
         window.App.core.vent.trigger('app:log', 'Device View: showDetails hit.');
         window.App.controller.details(this.model.id);
+    },
+
+    onClose : function () {
+      window.App.controller.destroyCurrentView(this);
+      socket.removeAllListeners('device-status');
     }
 });
 
 module.exports = CollectionView = Marionette.CompositeView.extend({
     template: require('../../templates/devices_container.hbs'),
     initialize: function() {
-      socket.emit('user-info', 'user data');
+      socket.emit('user-info', {'owner':'testfoo@gmail.com'});
     },
     itemView: itemView,
 
     onRender : function(){
-        this.$el.find('a.email').html(window.App.data.user);
+      this.$el.find('a.email').html(window.App.data.user);
+    },
+
+    onClose : function () {
+      window.App.controller.destroyCurrentView(this);
+      socket.removeAllListeners('device-status');
     }
 
 });
@@ -15573,7 +15591,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"device_small\">\n	<div class=\"details\">\n		<span class=\"fa fa-power-off default-device\"></span>\n	    <strong>";
+  buffer += "<div class=\"device_small\">\n	<div class=\"details\">\n		<span class=\"fa fa-power-off default-device\"></span>\n	  <span class=\"info\">\n			<strong>";
   if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -15581,7 +15599,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (stack1 = helpers.description) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.description; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "<p>\n	</div>    	\n	<div class=\"onoffswitch\">Info\n	</div>\n</div>\n";
+    + "<p>\n		</span>\n\n	</div>\n	<div class=\"onoffswitch\">offline\n	</div>\n</div>\n";
   return buffer;
   });
 

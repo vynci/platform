@@ -193,15 +193,13 @@ label {
 .device_small .onoffswitch,
 .device_full .onoffswitch {
   border-radius: 10px;
+  color: lightcoral;
   position: relative;
-  cursor: pointer;
-  background: #EEEEEE;
   width: 30%;
-  text-align: center;
 }
 .device_small .active-switch,
 .device_full .active-switch {
-  background: #99FF99;
+  color: #99FF99 !important;
 }
 .device_small .default-device,
 .device_full .default-device {

@@ -8,7 +8,7 @@ module.exports = DeviceDetailsView = Marionette.ItemView.extend({
     },
 
     goBack: function(e) {
-        e.preventDefault();
+        e.preventDefault();        
         window.App.controller.home();
     },
     deleteDevice: function(e) {

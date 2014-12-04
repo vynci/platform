@@ -45,8 +45,8 @@ if ('development' == app.get('env')) {
 }
 
 //connect to the db server:
-mongoose.connect('mongodb://laser:laser10@kahana.mongohq.com:10050/vynci-test');
-//mongoose.connect('mongodb://localhost/test-avayah2');
+//mongoose.connect('mongodb://laser:laser10@kahana.mongohq.com:10050/vynci-test');
+mongoose.connect('mongodb://localhost/test-avayah2');
 mongoose.connection.on('open', function() {
     console.log("Connected to Mongoose...");
 });
@@ -77,22 +77,32 @@ module.exports.emitSocket = function(status){
 io.sockets.on('connection', function (socket) {
 
     socket.on('device-info', function (data) {
-        socket.deviceId = data;
+        console.log(data);
+        socket.deviceId = data.serial;
+        socket.owner = data.owner;
+        socket.status = data.status
         deviceClients.push(socket);
-        console.log('client: ' + socket.deviceId + ' connected');
+        console.log('Device client: ' + socket.deviceId + ' connected');
         console.log('number of devices: ' + deviceClients.length);
+        matchUserClient(socket);
     });
 
     socket.on('user-info', function (data) {
-        socket.userId = data;
+        socket.userId = data.owner;
         userClients.push(socket);
-        console.log('client: ' + socket.userId + ' connected');
+        console.log('User client: ' + socket.userId + ' connected');
         console.log('number of users: ' + userClients.length);
-        socket.emit('device-status', 'device status!')
+        matchDeviceClient(socket);
     });
 
     socket.on('device-update', function (data) {
         matchUserClient( data );
+    });
+
+    socket.on('user-update', function (data) {
+        console.log('user update!!!');
+        console.log(data);
+        matchAndChangeState(data);
     });
 
     socket.on('disconnect', function() {
@@ -100,6 +110,8 @@ io.sockets.on('connection', function (socket) {
         var index2 = userClients.indexOf(socket);
 
         if (index != -1) {
+            socket.status = 'offline';
+            matchUserClient(socket);
             deviceClients.splice(index, 1);
             console.info('Device Client gone (id=' + socket.id + ').');
         }
@@ -114,11 +126,45 @@ io.sockets.on('connection', function (socket) {
 
 });
 
+// Emit status from Device to User Client
 function matchUserClient(data) {
-    console.log('Matching Client');
+    console.log('Matching User Client');
     _.each(userClients, function( client ) {
         if ( client.userId == data.owner) {
-            client.emit('status', data);
+            var deviceInfo = {
+              'serial' : data.deviceId || data.serial,
+              'owner'  : data.owner,
+              'status' : data.status,
+              'switchNum': data.switchNum,
+              'state': data.state
+            }
+            console.log('User Client Matched');
+            client.emit('device-status', deviceInfo);
         }
     } );
+}
+
+// Emit status of User to Device
+function matchDeviceClient(user) {
+    console.log('Matching Device Client');
+    _.each(deviceClients, function( device ) {
+        if ( device.owner == user.userId) {
+            var deviceInfo = {
+              'serial' : device.deviceId,
+              'status' : 'online'
+            }
+            console.log('Device Client Matched');
+            user.emit('device-status', deviceInfo);
+        }
+    } );
+}
+// emit to device the state update from user
+function matchAndChangeState(data) {
+  console.log('Matching Device Client for changing state');
+  _.each(deviceClients, function( device ) {
+    if ( device.deviceId == data.info[0].serial) {
+      console.log('Device Client Matched');
+      device.emit('status', data);
+    }
+  } );
 }

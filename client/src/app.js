@@ -17,7 +17,7 @@ App.prototype.start = function(){
         App.data.user = '';
 
         $.get( '/api/auth' )
-          .done(function( data ) {            
+          .done(function( data ) {
             if(typeof data === 'object' && data.local.email){
                 App.data.user = data.local.email;
                 var devices = new DevicesCollection();
@@ -26,13 +26,13 @@ App.prototype.start = function(){
                         App.data.devices = devices;
                         App.core.vent.trigger('app:start');
                     },
-                    url: '/api/devicesByOwner/' + data.local.email                    
-                });                 
+                    url: '/api/devicesByOwner/' + data.local.email
+                });
             }
             else{
                 App.core.vent.trigger('app:start');
             }
-           
+
           });
         // load up some initial data:
         //
