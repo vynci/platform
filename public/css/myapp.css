@@ -128,8 +128,7 @@ table {
 }
 
 body {
-  padding: 10px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px "Lucida Grande", Helvetica, Arial sans-serif;
 }
 a {
   color: #00B7FF;
@@ -155,9 +154,8 @@ label {
   height: 300px;
 }
 .header {
-  background-color: #5bc0de;
+  background-color: #1ABC9C;
   border-color: #46b8da;
-  border-radius: 10px;
   height: 35px;
   margin-bottom: 15px;
   padding-top: 8px;
@@ -167,16 +165,63 @@ label {
 .header a {
   color: #FFFFFF;
 }
+.login-box {
+  background: #ECF0F1;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  margin-top: 30px;
+}
+.login-box form {
+  padding-left: 30px;
+  padding-right: 30px;
+}
 .login-box button {
   width: 100%;
+}
+.login-box input {
+  border-radius: 0px;
+  box-shadow: inset 0 0px 0px;
+}
+.login-box button {
+  border-radius: 0px;
+  background: #1ABC9C;
+  border-color: #1ABC9C;
+}
+.login-box .title-logo {
+  background-color: #1ABC9C;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.login-box .title-logo h2 {
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
+  font-size: 75px;
+  color: white;
+}
+.login-box .login-bottom {
+  margin-top: 30px;
+  border-top: solid 1px #d3d3d3;
+}
+.login-box .login-bottom p {
+  margin-top: 10px;
+  text-align: center;
+  color: #878797;
+}
+.login-box .login-header {
+  margin-bottom: 20px;
+}
+.login-box .login-header h3 {
+  text-align: center;
+  font-weight: 300;
+  color: #16A085;
 }
 .device-input {
   margin-bottom: 10px;
 }
 .device_small,
 .device_full {
-  border-radius: 10px;
-  width: 274px;
+  width: 325px;
+  height: 100px;
   float: left;
   border: solid 1px #c0c0c0;
   padding: 5px;

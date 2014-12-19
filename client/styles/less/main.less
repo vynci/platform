@@ -1,4 +1,7 @@
-body { padding: 10px; font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
+body {
+	//padding: 10px;
+	font: 14px "Lucida Grande", Helvetica, Arial sans-serif;
+}
 
 a { color: #00B7FF; }
 h1 { font-size: 2em; font-weight: bold; margin-bottom: 3em;}
@@ -11,9 +14,8 @@ label { display: block; float: left; width: 120px; clear: left; }
 }
 
 .header {
-	background-color: #5bc0de;
+	background-color: #1ABC9C;
 	border-color: #46b8da;
-	border-radius: 10px;
 	height: 35px;
 	margin-bottom: 15px;
 	padding-top: 8px;
@@ -24,10 +26,61 @@ label { display: block; float: left; width: 120px; clear: left; }
 		color : #FFFFFF;
 	}
 }
+
 .login-box{
 
+	background: #ECF0F1;
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+	margin-top: 30px;
+	form {
+		padding-left: 30px;
+		padding-right: 30px;
+	}
 	button {
 		width:100%;
+	}
+
+	input {
+		border-radius: 0px;
+		box-shadow: inset 0 0px 0px
+	}
+
+	button {
+		border-radius: 0px;
+		background: #1ABC9C;
+		border-color: #1ABC9C;
+	}
+
+	.title-logo{
+		background-color: #1ABC9C;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		h2 {
+			font-family: 'Orbitron', sans-serif;
+			text-align: center;
+			font-size: 75px;
+			color: white;
+		}
+	}
+
+	.login-bottom{
+		margin-top: 30px;
+		border-top: solid 1px #d3d3d3;
+		p{
+			margin-top: 10px;
+			text-align: center;
+			color: #878797;
+		}
+	}
+
+	.login-header{
+		h3{
+			text-align: center;
+			font-weight: 300;
+			color: #16A085;
+		}
+		margin-bottom: 20px;
 	}
 
 }
@@ -37,8 +90,8 @@ label { display: block; float: left; width: 120px; clear: left; }
 }
 
 .device_small, .device_full {
-	border-radius: 10px;
-	width: 274px;
+	width: 325px;
+	height: 100px;
 	float: left;
 	border: solid 1px #c0c0c0;
 	padding: 5px;

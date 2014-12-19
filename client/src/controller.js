@@ -5,7 +5,7 @@ var Marionette = require('backbone.marionette'),
     SignUpView = require('./views/signup'),
     AddDeviceView = require('./views/add');
 
-var MyApp = new Backbone.Router();    
+var MyApp = new Backbone.Router();
 
 module.exports = Controller = Marionette.Controller.extend({
     initialize: function() {
@@ -28,21 +28,21 @@ module.exports = Controller = Marionette.Controller.extend({
         var view = window.App.views.signupView;
         this.renderView(view);
         window.App.router.navigate('#signup');
-    },    
+    },
 
-    home: function() {        
+    home: function() {
         var dataDevices = window.App.data.devices;
         App.core.vent.trigger('app:login');
-        
+
         if(dataDevices === undefined){
             MyApp.navigate('#login', {trigger: true});   
         }
         else{
-            window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });        
+            window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });
             var view = window.App.views.devicesView;
             this.renderView(view);
-            window.App.router.navigate('#home');  
-        }        
+            window.App.router.navigate('#home');
+        }
     },
 
     details: function(id) {
@@ -56,13 +56,13 @@ module.exports = Controller = Marionette.Controller.extend({
         var dataDevices = window.App.data.devices;
 
         if(dataDevices === undefined){
-            MyApp.navigate('#login', {trigger: true});   
-        }        
+            MyApp.navigate('#login', {trigger: true});
+        }
         else{
             App.core.vent.trigger('app:log', 'Controller: "Add Device" route hit.');
-            var view = new AddDeviceView();        
+            var view = new AddDeviceView();
             this.renderView(view);
-            window.App.router.navigate('add');            
+            window.App.router.navigate('add');
         }
 
     },

@@ -6,9 +6,8 @@ module.exports = DeviceDetailsView = Marionette.ItemView.extend({
 
     events: {
         'submit form': 'save'
-    },    
-
+    },
     save : function(){
-   
+
     }
 });
