@@ -35,13 +35,14 @@ module.exports = Controller = Marionette.Controller.extend({
         App.core.vent.trigger('app:login');
 
         if(dataDevices === undefined){
-            MyApp.navigate('#login', {trigger: true});   
+            MyApp.navigate('#login', {trigger: true});
         }
         else{
+          console.log('hello home!');
             window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });
             var view = window.App.views.devicesView;
             this.renderView(view);
-            window.App.router.navigate('#home');
+            window.App.router.navigate('home');
         }
     },
 
