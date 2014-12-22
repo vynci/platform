@@ -18,8 +18,9 @@ var itemView = Marionette.ItemView.extend({
     },
 
     onRender: function() {
-      console.log(this.model.get('info')[0].serial);
+      //console.log(this.model.get('info')[0].serial);
       this.$el.find('span.default-device').hide();
+      this.$el.find('span.sensor-device').hide();
     },
 
     updateState: function() {
@@ -31,7 +32,7 @@ var itemView = Marionette.ItemView.extend({
     },
 
     updateStatus: function(data) {
-      console.log(data);
+      console.log('device-status!');
       if(data.status === 'online' && data.serial === this.model.get('info')[0].serial){
         this.$el.find('div.onoffswitch').addClass('active-switch');
         this.$el.find('div.onoffswitch').html('online');
@@ -43,6 +44,12 @@ var itemView = Marionette.ItemView.extend({
         if(data.state === 1 && data.switchNum === this.model.get('info')[0].switchNum){
           this.$el.find('span.default-device').removeClass('active-switch');
         }
+        if(data.type === 'sensor' && data.switchNum === this.model.get('info')[0].switchNum){
+          this.$el.find('span.sensor-device').show();
+          this.$el.find('span.sensor-device').html(data.state + '&deg;C');
+          this.$el.find('span.default-device').hide();
+        }
+
       }
       else{
         this.$el.find('div.onoffswitch').removeClass('active-switch');
@@ -52,13 +59,18 @@ var itemView = Marionette.ItemView.extend({
     },
 
     showDetails: function() {
-        window.App.core.vent.trigger('app:log', 'Device View: showDetails hit.');
-        window.App.controller.details(this.model.id);
+      console.log(socket);
+      socket.removeListener('device-status');
+      window.App.core.vent.trigger('app:log', 'Device View: showDetails hit.');
+      window.App.controller.details(this.model.id);
     },
 
     onClose : function () {
+      console.log('remove listener');
+      socket.removeListener('device-status', function(data){
+        console.log('remove complete!');
+      });
       window.App.controller.destroyCurrentView(this);
-      socket.removeAllListeners('device-status');
     }
 });
 
@@ -76,6 +88,7 @@ module.exports = CollectionView = Marionette.CompositeView.extend({
     onClose : function () {
       window.App.controller.destroyCurrentView(this);
       socket.removeAllListeners('device-status');
+      console.log('remove all lstners');
     }
 
 });

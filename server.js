@@ -136,6 +136,7 @@ function matchUserClient(data) {
               'owner'  : data.owner,
               'status' : data.status,
               'switchNum': data.switchNum,
+              'type': data.type,
               'state': data.state
             }
             console.log('User Client Matched');
