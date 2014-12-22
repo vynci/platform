@@ -22,7 +22,6 @@ var itemView = Marionette.ItemView.extend({
       //console.log(this.model.get('info')[0].serial);
       this.$el.find('span.default-device').hide();
       this.$el.find('span.sensor-device').hide();
-      this.$el.find('span.empty-device').hide();
       this.$el.find('input.pwm-device').hide();
     },
 
