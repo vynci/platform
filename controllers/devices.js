@@ -1,5 +1,5 @@
-var models = require('../app/models'), 
-    server = require('../server'),    
+var models = require('../app/models'),
+    server = require('../server'),
     md5 = require('MD5');
 console.log(server);
 module.exports = {
@@ -31,8 +31,6 @@ module.exports = {
 
     add: function(req, res) {
         var newDevice = new models.Device(req.body);
-        newDevice.info = req.body.info;
-        console.log(newDevice)      
         newDevice.save(function(err, device) {
             if (err) {
                 res.json({error: err});
@@ -41,8 +39,8 @@ module.exports = {
             }
         });
     },
-    update: function(req, res) {                
-        models.Device.findById(req.params.id, function(err, device) {            
+    update: function(req, res) {
+        models.Device.findById(req.params.id, function(err, device) {
             var key;
             for (key in req.body) {
               device[key] = req.body[key];
@@ -53,12 +51,12 @@ module.exports = {
             } else {
                 device.save(function (err) {
                     if(err){
-                        res.json({error: 'Error updating device.'}); 
+                        res.json({error: 'Error updating device.'});
                     }
                     else{
                         res.json(device);
                         server.emitSocket(device);
-                    }                    
+                    }
                 });
             }
         })

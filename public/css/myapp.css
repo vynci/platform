@@ -237,8 +237,8 @@ label {
   height: 45px;
   margin-bottom: 5px;
 }
-.device_small .onoffswitch,
-.device_full .onoffswitch {
+.device_small .hub-status,
+.device_full .hub-status {
   border-radius: 10px;
   color: lightcoral;
   position: relative;
@@ -256,15 +256,33 @@ label {
   width: 45px;
   height: 45px;
   margin-right: 5px;
+  cursor: pointer;
 }
 .device_small .sensor-device,
 .device_full .sensor-device {
+  font-size: 55px;
+  color: #999;
+  float: right;
+  width: 45px;
+  height: 45px;
+  margin-right: 85px;
+}
+.device_small .empty-device,
+.device_full .empty-device {
   font-size: 60px;
   color: #999;
   float: right;
   width: 45px;
   height: 45px;
-  margin-right: 95px;
+  margin-right: 30px;
+}
+.device_small .pwm-device,
+.device_full .pwm-device {
+  color: #999;
+  float: right;
+  width: 120px;
+  height: 45px;
+  margin-right: 10px;
 }
 .device_full {
   float: none;

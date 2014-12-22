@@ -6,7 +6,7 @@ var itemView = Marionette.ItemView.extend({
     template: require('../../templates/device_small.hbs'),
     initialize: function() {
       var that = this;
-      console.log('init!');
+      console.log('item view init!');
       this.listenTo(this.model, 'destroy', this.remove);
       socket.on('device-status', function ( data ) {
           that.updateStatus( data );
@@ -14,40 +14,59 @@ var itemView = Marionette.ItemView.extend({
     },
     events: {
         'click span.info': 'showDetails',
-        'click span.default-device' : 'updateState'
+        'click span.default-device' : 'updateState',
+        'click input.pwm-device' : 'updatePWM'
     },
 
     onRender: function() {
       //console.log(this.model.get('info')[0].serial);
       this.$el.find('span.default-device').hide();
       this.$el.find('span.sensor-device').hide();
+      this.$el.find('span.empty-device').hide();
+      this.$el.find('input.pwm-device').hide();
+    },
+
+    updatePWM: function() {
+      console.log(this.$el.find('input.pwm-device').val());
+      socket.emit('user-update', {
+        'owner':'testfoo@gmail.com',
+        'state':1
+      });
     },
 
     updateState: function() {
       socket.emit('user-update', {
         'owner':'testfoo@gmail.com',
-        'state':1,
-        'info': this.model.get( 'info' )
+        'state':1
       });
     },
 
     updateStatus: function(data) {
-      console.log('device-status!');
-      if(data.status === 'online' && data.serial === this.model.get('info')[0].serial){
-        this.$el.find('div.onoffswitch').addClass('active-switch');
-        this.$el.find('div.onoffswitch').html('online');
-        this.$el.find('span.default-device').show();
+      console.log('update-status!');
 
-        if(data.state === 0 && data.switchNum === this.model.get('info')[0].switchNum){
+      if(data.status === 'online' && data.serial === this.model.get('serial')){
+        this.$el.find('span.hub-status').addClass('active-switch');
+        this.$el.find('span.hub-status').html('online');
+
+        if(data.state === 0 && data.switchNum === this.model.get('switchNum')){
+          this.$el.find('span.default-device').show();
           this.$el.find('span.default-device').addClass('active-switch');
         }
-        if(data.state === 1 && data.switchNum === this.model.get('info')[0].switchNum){
+        if(data.state === 1 && data.switchNum === this.model.get('switchNum')){
+          this.$el.find('span.default-device').show();
           this.$el.find('span.default-device').removeClass('active-switch');
         }
-        if(data.type === 'sensor' && data.switchNum === this.model.get('info')[0].switchNum){
+        if(data.type === 'sensor' && data.switchNum === this.model.get('switchNum')){
           this.$el.find('span.sensor-device').show();
-          this.$el.find('span.sensor-device').html(data.state + '&deg;C');
+          this.$el.find('span.sensor-device').html(data.state);
           this.$el.find('span.default-device').hide();
+          this.$el.find('span.empty-device').hide();
+        }
+        if(data.type === 'pwm' && data.switchNum === this.model.get('switchNum')){
+          this.$el.find('input.pwm-device').show();
+          this.$el.find('input.pwm-device').attr('value', data.state);
+          this.$el.find('span.default-device').hide();
+          this.$el.find('span.empty-device').hide();
         }
 
       }
@@ -55,21 +74,17 @@ var itemView = Marionette.ItemView.extend({
         this.$el.find('div.onoffswitch').removeClass('active-switch');
         this.$el.find('div.onoffswitch').html('offline');
         this.$el.find('span.default-device').hide();
+        this.$el.find('span.default-device').hide();
+        this.$el.find('span.empty-device').hide();
       }
     },
 
     showDetails: function() {
-      console.log(socket);
-      socket.removeListener('device-status');
       window.App.core.vent.trigger('app:log', 'Device View: showDetails hit.');
       window.App.controller.details(this.model.id);
     },
 
     onClose : function () {
-      console.log('remove listener');
-      socket.removeListener('device-status', function(data){
-        console.log('remove complete!');
-      });
       window.App.controller.destroyCurrentView(this);
     }
 });
@@ -77,6 +92,10 @@ var itemView = Marionette.ItemView.extend({
 module.exports = CollectionView = Marionette.CompositeView.extend({
     template: require('../../templates/devices_container.hbs'),
     initialize: function() {
+      console.log('view init!');
+      if(!socket.connected){
+        socket.connect();
+      }
       socket.emit('user-info', {'owner':'testfoo@gmail.com'});
     },
     itemView: itemView,
@@ -88,7 +107,8 @@ module.exports = CollectionView = Marionette.CompositeView.extend({
     onClose : function () {
       window.App.controller.destroyCurrentView(this);
       socket.removeAllListeners('device-status');
-      console.log('remove all lstners');
+      socket.disconnect();
+      socket.destroy();
     }
 
 });
