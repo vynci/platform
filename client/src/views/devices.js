@@ -36,7 +36,9 @@ var itemView = Marionette.ItemView.extend({
     updateState: function() {
       socket.emit('user-update', {
         'owner':'testfoo@gmail.com',
-        'state':1
+        'state':1,
+        'serial': this.model.get('serial'),
+        'switchNum': this.model.get('switchNum')
       });
     },
 
@@ -46,7 +48,8 @@ var itemView = Marionette.ItemView.extend({
       if(data.status === 'online' && data.serial === this.model.get('serial')){
         this.$el.find('span.hub-status').addClass('active-switch');
         this.$el.find('span.hub-status').html('online');
-
+        this.$el.find('span.default-device').show();
+        
         if(data.state === 0 && data.switchNum === this.model.get('switchNum')){
           this.$el.find('span.default-device').show();
           this.$el.find('span.default-device').addClass('active-switch');

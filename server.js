@@ -163,7 +163,7 @@ function matchDeviceClient(user) {
 function matchAndChangeState(data) {
   console.log('Matching Device Client for changing state');
   _.each(deviceClients, function( device ) {
-    if ( device.deviceId == data.info[0].serial) {
+    if ( device.deviceId == data.serial) {
       console.log('Device Client Matched');
       device.emit('status', data);
     }
