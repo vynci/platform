@@ -1,6 +1,7 @@
 var Marionette = require('backbone.marionette');
 var io = require('../../requires/socket.io-client/js/socket.io');
 var socket = io(window.location.host);
+var _ = require('underscore');
 
 var itemView = Marionette.ItemView.extend({
     template: require('../../templates/device_small.hbs'),
@@ -44,17 +45,24 @@ var itemView = Marionette.ItemView.extend({
 
     updateStatus: function(data) {
       console.log('update-status!');
+      console.log( data );
+      var deviceStatus = _.findWhere(data.nodes, {switchNum : this.model.get('switchNum')});
+      if(deviceStatus){
+        data.state = deviceStatus.state;
+        data.switchNum = deviceStatus.switchNum;
+        console.log(data);
+      }
 
       if(data.status === 'online' && data.serial === this.model.get('serial')){
         this.$el.find('span.hub-status').addClass('active-switch');
         this.$el.find('span.hub-status').html('online');
         this.$el.find('span.default-device').show();
         
-        if(data.state === 0 && data.switchNum === this.model.get('switchNum')){
+        if(data.state === 'on' && data.switchNum === this.model.get('switchNum')){
           this.$el.find('span.default-device').show();
           this.$el.find('span.default-device').addClass('active-switch');
         }
-        if(data.state === 1 && data.switchNum === this.model.get('switchNum')){
+        if(data.state === 'off' && data.switchNum === this.model.get('switchNum')){
           this.$el.find('span.default-device').show();
           this.$el.find('span.default-device').removeClass('active-switch');
         }
@@ -62,22 +70,19 @@ var itemView = Marionette.ItemView.extend({
           this.$el.find('span.sensor-device').show();
           this.$el.find('span.sensor-device').html(data.state);
           this.$el.find('span.default-device').hide();
-          this.$el.find('span.empty-device').hide();
         }
         if(data.type === 'pwm' && data.switchNum === this.model.get('switchNum')){
           this.$el.find('input.pwm-device').show();
           this.$el.find('input.pwm-device').attr('value', data.state);
           this.$el.find('span.default-device').hide();
-          this.$el.find('span.empty-device').hide();
         }
 
       }
       else{
-        this.$el.find('div.onoffswitch').removeClass('active-switch');
-        this.$el.find('div.onoffswitch').html('offline');
+        this.$el.find('span.hub-status').removeClass('active-switch');
+        this.$el.find('span.hub-status').html('offline');
         this.$el.find('span.default-device').hide();
         this.$el.find('span.default-device').hide();
-        this.$el.find('span.empty-device').hide();
       }
     },
 

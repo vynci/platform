@@ -15442,6 +15442,7 @@ module.exports = DeviceDetailsView = Marionette.ItemView.extend({
 var Marionette = require('backbone.marionette');
 var io = require('../../requires/socket.io-client/js/socket.io');
 var socket = io(window.location.host);
+var _ = require('underscore');
 
 var itemView = Marionette.ItemView.extend({
     template: require('../../templates/device_small.hbs'),
@@ -15485,17 +15486,24 @@ var itemView = Marionette.ItemView.extend({
 
     updateStatus: function(data) {
       console.log('update-status!');
+      console.log( data );
+      var deviceStatus = _.findWhere(data.nodes, {switchNum : this.model.get('switchNum')});
+      if(deviceStatus){
+        data.state = deviceStatus.state;
+        data.switchNum = deviceStatus.switchNum;
+        console.log(data);
+      }
 
       if(data.status === 'online' && data.serial === this.model.get('serial')){
         this.$el.find('span.hub-status').addClass('active-switch');
         this.$el.find('span.hub-status').html('online');
         this.$el.find('span.default-device').show();
         
-        if(data.state === 0 && data.switchNum === this.model.get('switchNum')){
+        if(data.state === 'on' && data.switchNum === this.model.get('switchNum')){
           this.$el.find('span.default-device').show();
           this.$el.find('span.default-device').addClass('active-switch');
         }
-        if(data.state === 1 && data.switchNum === this.model.get('switchNum')){
+        if(data.state === 'off' && data.switchNum === this.model.get('switchNum')){
           this.$el.find('span.default-device').show();
           this.$el.find('span.default-device').removeClass('active-switch');
         }
@@ -15503,22 +15511,19 @@ var itemView = Marionette.ItemView.extend({
           this.$el.find('span.sensor-device').show();
           this.$el.find('span.sensor-device').html(data.state);
           this.$el.find('span.default-device').hide();
-          this.$el.find('span.empty-device').hide();
         }
         if(data.type === 'pwm' && data.switchNum === this.model.get('switchNum')){
           this.$el.find('input.pwm-device').show();
           this.$el.find('input.pwm-device').attr('value', data.state);
           this.$el.find('span.default-device').hide();
-          this.$el.find('span.empty-device').hide();
         }
 
       }
       else{
-        this.$el.find('div.onoffswitch').removeClass('active-switch');
-        this.$el.find('div.onoffswitch').html('offline');
+        this.$el.find('span.hub-status').removeClass('active-switch');
+        this.$el.find('span.hub-status').html('offline');
         this.$el.find('span.default-device').hide();
         this.$el.find('span.default-device').hide();
-        this.$el.find('span.empty-device').hide();
       }
     },
 
@@ -15556,7 +15561,7 @@ module.exports = CollectionView = Marionette.CompositeView.extend({
 
 });
 
-},{"../../requires/socket.io-client/js/socket.io":1,"../../templates/device_small.hbs":16,"../../templates/devices_container.hbs":17}],12:[function(require,module,exports){
+},{"../../requires/socket.io-client/js/socket.io":1,"../../templates/device_small.hbs":16,"../../templates/devices_container.hbs":17,"underscore":false}],12:[function(require,module,exports){
 var Marionette = require('backbone.marionette');
 var DeviceModel = require('../models/user');
 
@@ -15624,7 +15629,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"device_small\">\n	<div class=\"details\">\n		<span class=\"sensor-device\"></span>\n		<span class=\"fa fa-power-off default-device\"></span>\n		<span class=\"fa fa-ellipsis-h empty-device\"></span>\n		<input type=\"range\" id=\"myRange\" value=\"90\" class=\"pwm-device\">\n	  <span class=\"info\">\n			<strong>";
+  buffer += "<div class=\"device_small\">\n	<div class=\"details\">\n		<span class=\"sensor-device\"></span>\n		<span class=\"fa fa-power-off default-device\"></span>\n		<input type=\"range\" id=\"myRange\" value=\"90\" class=\"pwm-device\">\n	  <span class=\"info\">\n			<strong>";
   if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)

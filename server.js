@@ -80,7 +80,9 @@ io.sockets.on('connection', function (socket) {
         console.log(data);
         socket.deviceId = data.serial;
         socket.owner = data.owner;
-        socket.status = data.status
+        socket.status = data.status;
+        socket.nodes = data.nodes;
+
         deviceClients.push(socket);
         console.log('Device client: ' + socket.deviceId + ' connected');
         console.log('number of devices: ' + deviceClients.length);
@@ -104,6 +106,11 @@ io.sockets.on('connection', function (socket) {
         console.log(data);
         matchAndChangeState(data);
     });
+
+    socket.on('device-state-update', function (data) {
+        console.log(data);
+        matchAndUpdateStateOnUser( data );
+    });    
 
     socket.on('disconnect', function() {
         var index  = deviceClients.indexOf(socket);
@@ -152,10 +159,12 @@ function matchDeviceClient(user) {
         if ( device.owner == user.userId) {
             var deviceInfo = {
               'serial' : device.deviceId,
-              'status' : 'online'
+              'status' : 'online',
+              'nodes'  : device.nodes
             }
             console.log('Device Client Matched');
-            user.emit('device-status', deviceInfo);
+            //user.emit('device-status', deviceInfo);
+            device.emit('device-state', deviceInfo);
         }
     } );
 }
@@ -168,4 +177,19 @@ function matchAndChangeState(data) {
       device.emit('status', data);
     }
   } );
+}
+
+function matchAndUpdateStateOnUser(data) {
+  console.log('Matching Device Client for changing state');
+    _.each(userClients, function( client ) {
+        if ( client.userId == data.owner) {
+            var deviceInfo = {
+              'serial' : data.serial,
+              'status' : 'online',
+              'nodes'  : data.nodes
+            }
+            console.log('User Client Matched');
+            client.emit('device-status', deviceInfo);
+        }
+    } );
 }
