@@ -243,10 +243,19 @@ label {
   color: lightcoral;
   position: relative;
   width: 30%;
+  padding-right: 50px;
+}
+.device_small .link-status,
+.device_full .link-status {
+  border-radius: 10px;
+  color: #87D37C;
+  position: relative;
+  width: 30%;
+  cursor: pointer;
 }
 .device_small .active-switch,
 .device_full .active-switch {
-  color: #99FF99 !important;
+  color: #87D37C !important;
 }
 .device_small .default-device,
 .device_full .default-device {
@@ -267,6 +276,10 @@ label {
   height: 45px;
   margin-right: 85px;
 }
+.device_small .info,
+.device_full .info {
+  cursor: pointer;
+}
 .device_small .empty-device,
 .device_full .empty-device {
   font-size: 60px;
@@ -286,7 +299,7 @@ label {
 }
 .device_full {
   float: none;
-  height: 325px;
+  height: 480px;
 }
 .device_full img {
   margin-left: 5px;

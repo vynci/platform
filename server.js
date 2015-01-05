@@ -45,8 +45,8 @@ if ('development' == app.get('env')) {
 }
 
 //connect to the db server:
-mongoose.connect('mongodb://laser:laser10@kahana.mongohq.com:10050/vynci-test');
-//mongoose.connect('mongodb://localhost/test-avayah2');
+//mongoose.connect('mongodb://laser:laser10@kahana.mongohq.com:10050/vynci-test');
+mongoose.connect('mongodb://localhost/test-avayah2');
 mongoose.connection.on('open', function() {
     console.log("Connected to Mongoose...");
 });
@@ -110,7 +110,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('device-state-update', function (data) {
         console.log(data);
         matchAndUpdateStateOnUser( data );
-    });    
+    });
 
     socket.on('disconnect', function() {
         var index  = deviceClients.indexOf(socket);

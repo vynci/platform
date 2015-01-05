@@ -6,9 +6,11 @@ module.exports = DeviceDetailsView = Marionette.ItemView.extend({
         'click a.back': 'goBack',
         'click a.delete': 'deleteDevice'
     },
-
+    initialize : function(){
+      console.log(this.model);
+    },
     goBack: function(e) {
-        e.preventDefault();        
+        e.preventDefault();
         window.App.controller.home();
     },
     deleteDevice: function(e) {

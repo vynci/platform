@@ -8,8 +8,8 @@ var Device = new Schema({
     state       : { type: Number },
     owner       : { type: String },
     serial      : { type: String },
-    switchNum   : { type: Number },
-    link        : { type: Number }
+    switchNum   : { type: String },
+    link        : { type: String }
 });
 
 module.exports = {

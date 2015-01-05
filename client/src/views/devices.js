@@ -16,7 +16,8 @@ var itemView = Marionette.ItemView.extend({
     events: {
         'click span.info': 'showDetails',
         'click span.default-device' : 'updateState',
-        'click input.pwm-device' : 'updatePWM'
+        'click input.pwm-device' : 'updatePWM',
+        'click span.link-status' : 'showDetails'
     },
 
     onRender: function() {
@@ -24,19 +25,23 @@ var itemView = Marionette.ItemView.extend({
       this.$el.find('span.default-device').hide();
       this.$el.find('span.sensor-device').hide();
       this.$el.find('input.pwm-device').hide();
+
+      if( this.model.get('link') ){
+        this.$el.find('span.link-status').html(this.model.get('link'));
+      }
     },
 
     updatePWM: function() {
       console.log(this.$el.find('input.pwm-device').val());
       socket.emit('user-update', {
-        'owner':'testfoo@gmail.com',
+        'owner':App.data.user,
         'state':1
       });
     },
 
     updateState: function() {
       socket.emit('user-update', {
-        'owner':'testfoo@gmail.com',
+        'owner':App.data.user,
         'state':1,
         'serial': this.model.get('serial'),
         'switchNum': this.model.get('switchNum')
@@ -57,7 +62,7 @@ var itemView = Marionette.ItemView.extend({
         this.$el.find('span.hub-status').addClass('active-switch');
         this.$el.find('span.hub-status').html('online');
         this.$el.find('span.default-device').show();
-        
+
         if(data.state === 'on' && data.switchNum === this.model.get('switchNum')){
           this.$el.find('span.default-device').show();
           this.$el.find('span.default-device').addClass('active-switch');
@@ -99,11 +104,10 @@ var itemView = Marionette.ItemView.extend({
 module.exports = CollectionView = Marionette.CompositeView.extend({
     template: require('../../templates/devices_container.hbs'),
     initialize: function() {
-      console.log('view init!');
       if(!socket.connected){
         socket.connect();
       }
-      socket.emit('user-info', {'owner':'testfoo@gmail.com'});
+      socket.emit('user-info', {'owner':App.data.user});
     },
     itemView: itemView,
 

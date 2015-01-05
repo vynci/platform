@@ -6,6 +6,11 @@ module.exports = AddView = Marionette.ItemView.extend({
         'click a.save-button': 'save'
     },
 
+    initialize : function() {
+      console.log('add!');
+      console.log(App.data.devices);
+    },
+
     save: function(e) {
         e.preventDefault();
         var newDevice = {
@@ -14,7 +19,9 @@ module.exports = AddView = Marionette.ItemView.extend({
             owner: window.App.data.user,
             state: 1,
             serial: this.$el.find('#serial').val(),
-            switchNum : parseInt( this.$el.find('#switch-number').val() )
+            switchNum : this.$el.find('#switch-number').val(),
+            link : this.$el.find('#link').val()
+
         };
 
         window.App.data.devices.create(newDevice);
