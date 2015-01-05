@@ -36,6 +36,7 @@ module.exports = {
                 res.json({error: err});
             } else {
                 res.json(device);
+                server.emitSocket(device);
             }
         });
     },

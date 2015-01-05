@@ -67,8 +67,8 @@ var userClients = [];
 
 module.exports.emitSocket = function(status){
     _.each(deviceClients, function( client ) {
-        if ( client.deviceId == status.info[0].serial) {
-            client.emit('status', status);
+        if ( client.deviceId == status.serial) {
+            client.emit('config-save', status);
         }
     } );
     console.log(status);
