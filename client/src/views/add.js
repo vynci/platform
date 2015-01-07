@@ -3,7 +3,7 @@ var Marionette = require('backbone.marionette');
 module.exports = AddView = Marionette.ItemView.extend({
     template: require('../../templates/add.hbs'),
     events: {
-        'click a.save-button': 'save'
+        'click button.save-button': 'save'
     },
 
     initialize : function() {

@@ -1,3 +1,4 @@
+<!--
 <div class="device_full">
     <img src="http://www.gravatar.com/avatar/{{gravatar}}?d=monsterid&s=250"/>
     <br/><br/>
@@ -29,3 +30,39 @@
 
 
 <a href="#" class="back"><< Back</a> | <a href="#" class="save-button">Save</a> | <a href="#" class="delete">Delete Device</a>
+-->
+
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel">Device Details</h4>
+    </div>
+    <div class="modal-body">
+      <div class="device-input">
+        <label for="name">Name:</label> <input type="text" id="name" value="{{name}}">
+      </div>
+
+      <div class="device-input">
+        <label for="serial">Hub Code:</label> <input type="text" id="serial" value="{{serial}}">
+      </div>
+
+      <div class="device-input">
+        <label for="switch-number">Switch Code:</label> <input type="text" id="switch-number" value="{{switchNum}}">
+      </div>
+
+      <div class="device-input">
+        <label for="link">Link:</label> <input type="text" id="link" value="{{link}}"/>
+      </div>
+
+      <div class="device-input">
+        <label for="description">Description:</label> <input type="text" id="description" value="{{description}}">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-danger delete" data-dismiss="modal">Delete</button>
+      <button type="button" class="btn btn-primary save-button">Save changes</button>
+    </div>
+  </div>
+</div>

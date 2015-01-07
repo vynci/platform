@@ -151,7 +151,7 @@ label {
   clear: both;
 }
 #content {
-  height: 300px;
+  height: 1000px;
 }
 .header {
   background-color: #1ABC9C;
@@ -162,8 +162,10 @@ label {
   padding-right: 20px;
   text-align: right;
 }
-.header a {
+.header a,
+.header span {
   color: #FFFFFF;
+  cursor: pointer;
 }
 .login-box {
   background: #ECF0F1;
@@ -218,6 +220,9 @@ label {
 }
 .device-input {
   margin-bottom: 10px;
+}
+.device-input input {
+  width: 60%;
 }
 .device_small,
 .device_full {

@@ -4,11 +4,15 @@ module.exports = DeviceDetailsView = Marionette.ItemView.extend({
     template: require('../../templates/device_details.hbs'),
     events: {
         'click a.back': 'goBack',
-        'click a.delete': 'deleteDevice',
-        'click a.save-button': 'save'
+        'click button.delete': 'deleteDevice',
+        'click button.save-button': 'save'
     },
     initialize : function(){
-      console.log(this.model);
+      //console.log(this.model);
+    },
+
+    onRender: function(){
+      console.log(this.$el.find('#name').val());
     },
 
     save : function(e){
@@ -29,7 +33,7 @@ module.exports = DeviceDetailsView = Marionette.ItemView.extend({
         success : function ( data ) {
           console.log(data);
           window.App.core.vent.trigger('app:log', 'Add View: Saved new device!');
-          window.App.controller.home();          
+          window.App.controller.home();
         }
       } );
     },

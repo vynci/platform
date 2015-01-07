@@ -2,6 +2,8 @@ var Marionette = require('backbone.marionette');
 var io = require('../../requires/socket.io-client/js/socket.io');
 var socket = io(window.location.host);
 var _ = require('underscore');
+var AddView = require('./add');
+var DetailsView = require('./device_details');
 
 var itemView = Marionette.ItemView.extend({
     template: require('../../templates/device_small.hbs'),
@@ -92,8 +94,15 @@ var itemView = Marionette.ItemView.extend({
     },
 
     showDetails: function() {
-      window.App.core.vent.trigger('app:log', 'Device View: showDetails hit.');
-      window.App.controller.details(this.model.id);
+
+      var view = new DetailsView({ model: this.model});
+      view.render();
+
+      var $modalEl = $("#myModal");
+      $modalEl.html(view.el);
+      $modalEl.modal();
+      // window.App.core.vent.trigger('app:log', 'Device View: showDetails hit.');
+      // window.App.controller.details(this.model.id);
     },
 
     onClose : function () {
@@ -109,17 +118,33 @@ module.exports = CollectionView = Marionette.CompositeView.extend({
       }
       socket.emit('user-info', {'owner':App.data.user});
     },
+
     itemView: itemView,
+    events: {
+      'click span.add-device': 'addDevice'
+    },
 
     onRender : function(){
       this.$el.find('a.email').html(window.App.data.user);
     },
 
+    addDevice : function(){
+      var view = new AddView();
+      view.render();
+
+      var $modalEl = $("#myModal");
+      $modalEl.html(view.el);
+      $modalEl.modal();
+    },
+
     onClose : function () {
+      console.log('Collection View Closed!');
       window.App.controller.destroyCurrentView(this);
       socket.removeAllListeners('device-status');
       socket.disconnect();
       socket.destroy();
     }
+
+
 
 });
