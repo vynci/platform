@@ -16,30 +16,36 @@ module.exports.initialize = function(app, passport) {
 		res.redirect('/');
 	});
 
-	app.get('/home', isLoggedIn, function(req, res) {		
+	app.get('/home', isLoggedIn, function(req, res) {
 		res.render('index');
-	});	
+	});
 
 	app.post('/login', passport.authenticate('local-login', {
 		successRedirect : '/#home', // redirect to the secure profile section
 		failureRedirect : '/', // redirect back to the signup page if there is an error
-		failureFlash : true // allow flash messages
-	}));
+		failureFlash : true, // allow flash messages
+	}), function(req, res) {
+    if (req.body.remember) {
+      req.session.cookie.maxAge = 1000 * 60 * 3;
+    } else {
+      req.session.cookie.expires = false;
+    }
+  });
 
-	app.get('/api/auth', isLoggedIn, function(req, res) {		
+	app.get('/api/auth', isLoggedIn, function(req, res) {
 		res.send(req.user)
-	});	
+	});
 
 	app.post('/signup', passport.authenticate('local-signup', {
 		successRedirect : '/#home', // redirect to the secure profile section
 		failureRedirect : '/#signup', // redirect back to the signup page if there is an error
 		failureFlash : true // allow flash messages
-	}));	
+	}));
 };
 
 function isLoggedIn(req, res, next) {
 
-	// if user is authenticated in the session, carry on 
+	// if user is authenticated in the session, carry on
 	if (req.isAuthenticated())
 		return next();
 

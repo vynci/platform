@@ -151,7 +151,7 @@ label {
   clear: both;
 }
 #content {
-  height: 1000px;
+  height: 300px;
 }
 .header {
   background-color: #1ABC9C;
@@ -172,7 +172,11 @@ label {
   padding-left: 0px !important;
   padding-right: 0px !important;
   margin-top: 30px;
-  border-radius: 40px;
+}
+@media (max-width: 400px) {
+  .login-box {
+    margin-top: 0px;
+  }
 }
 .login-box form {
   padding-left: 30px;
@@ -198,12 +202,13 @@ label {
 .login-box .title-logo h2 {
   font-family: 'Orbitron', sans-serif;
   text-align: center;
-  font-size: 75px;
+  font-size: 68px;
   color: white;
 }
 .login-box .login-bottom {
   margin-top: 30px;
   border-top: solid 1px #d3d3d3;
+  padding-bottom: 5px;
 }
 .login-box .login-bottom p {
   margin-top: 10px;
@@ -222,17 +227,20 @@ label {
   margin-bottom: 10px;
 }
 .device-input input {
-  width: 60%;
+  width: 53%;
+  border-radius: 0px;
+  box-shadow: inset 0 0px 0px;
 }
 .device_small,
 .device_full {
-  width: 325px;
+  width: 310px;
   height: 100px;
   float: left;
   border: solid 1px #c0c0c0;
   box-shadow: 1px 1px 1px #c0c0c0;
   padding: 5px;
-  margin-right: 10px;
+  margin-right: 5px;
+  margin-left: 5px;
   margin-bottom: 10px;
 }
 .device_small .details,
@@ -248,7 +256,7 @@ label {
   color: lightcoral;
   position: relative;
   width: 30%;
-  padding-right: 50px;
+  padding-right: 20px;
 }
 .device_small .link-status,
 .device_full .link-status {

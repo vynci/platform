@@ -17600,77 +17600,85 @@ var MyApp = new Backbone.Router();
 
 module.exports = Controller = Marionette.Controller.extend({
     initialize: function() {
-        App.core.vent.trigger('app:log', 'Controller: Initializing');
-        //window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });
-        window.App.views.loginView = new LoginView();
+      App.core.vent.trigger('app:log', 'Controller: Initializing');
+      //window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });
+      window.App.views.loginView = new LoginView();
     },
 
     login: function() {
-        window.App.views.loginView = new LoginView();
-        App.core.vent.trigger('app:log', 'Controller: "login" route hit.');
-        var view = window.App.views.loginView;
-        this.renderView(view);
-        window.App.router.navigate('#login');
+      var dataDevices = window.App.data.devices;
+      window.App.views.loginView = new LoginView();
+      App.core.vent.trigger('app:log', 'Controller: "login" route hit.');
+      var view = window.App.views.loginView;
+      this.renderView(view);
+      console.log(window.App.data.devices);
+      if(dataDevices === undefined){
+        MyApp.navigate('#login', {trigger: true});
+      }
+      else{
+        MyApp.navigate('#home', {trigger: true});
+      }
+
     },
 
     signup: function() {
-        window.App.views.signupView = new SignUpView();
-        App.core.vent.trigger('app:log', 'Controller: "signup" route hit.');
-        var view = window.App.views.signupView;
-        this.renderView(view);
-        window.App.router.navigate('#signup');
+      window.App.views.signupView = new SignUpView();
+      App.core.vent.trigger('app:log', 'Controller: "signup" route hit.');
+      var view = window.App.views.signupView;
+      this.renderView(view);
+      window.App.router.navigate('#signup');
     },
 
     home: function() {
-        var dataDevices = window.App.data.devices;
-        App.core.vent.trigger('app:login');
+      var dataDevices = window.App.data.devices;
+      App.core.vent.trigger('app:login');
 
-        if(dataDevices === undefined){
-            MyApp.navigate('#login', {trigger: true});
-        }
-        else{
-          console.log('hello home!');
-            window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });
-            var view = window.App.views.devicesView;
-            this.renderView(view);
-            window.App.router.navigate('home');
-        }
+      if(dataDevices === undefined){
+          MyApp.navigate('#login', {trigger: true});
+      }
+      else{
+        console.log('hello home!');
+          window.App.views.devicesView = new DevicesView({ collection: window.App.data.devices });
+          var view = window.App.views.devicesView;
+          this.renderView(view);
+          window.App.router.navigate('home');
+      }
     },
 
     details: function(id) {
-        App.core.vent.trigger('app:log', 'Controller: "Device Details" route hit.');
-        var view = new DeviceDetailsView({ model: window.App.data.devices.get(id)});
-        this.renderView(view);
-        window.App.router.navigate('details/' + id);
+      App.core.vent.trigger('app:log', 'Controller: "Device Details" route hit.');
+      var view = new DeviceDetailsView({ model: window.App.data.devices.get(id)});
+      this.renderView(view);
+      window.App.router.navigate('details/' + id);
     },
 
     add: function() {
-        var dataDevices = window.App.data.devices;
+      var dataDevices = window.App.data.devices;
 
-        if(dataDevices === undefined){
-            MyApp.navigate('#login', {trigger: true});
-        }
-        else{
-            App.core.vent.trigger('app:log', 'Controller: "Add Device" route hit.');
-            var view = new AddDeviceView();
-            this.renderView(view);
-            window.App.router.navigate('add');
-        }
+      if(dataDevices === undefined){
+          MyApp.navigate('#login', {trigger: true});
+      }
+      else{
+          App.core.vent.trigger('app:log', 'Controller: "Add Device" route hit.');
+          var view = new AddDeviceView();
+          this.renderView(view);
+          window.App.router.navigate('add');
+      }
 
     },
 
     renderView: function(view) {
-        this.destroyCurrentView(view);
-        App.core.vent.trigger('app:log', 'Controller: Rendering new view.');
-        $('#js-boilerplate-app').html(view.render().el);
+      this.destroyCurrentView(view);
+      App.core.vent.trigger('app:log', 'Controller: Rendering new view.');
+      $('#js-boilerplate-app').html(view.render().el);
     },
 
     destroyCurrentView: function(view) {
-        if (!_.isUndefined(window.App.views.currentView)) {
-            App.core.vent.trigger('app:log', 'Controller: Destroying existing view.');
-            window.App.views.currentView.close();
-        }
-        window.App.views.currentView = view;
+      if (!_.isUndefined(window.App.views.currentView)) {
+          App.core.vent.trigger('app:log', 'Controller: Destroying existing view.');
+          window.App.views.currentView.close();
+      }
+      window.App.views.currentView = view;
     }
 });
 
@@ -18083,7 +18091,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "\n<div class=\"login-box col-sm-4 col-sm-offset-4\">\n		<!-- LOGIN FORM -->\n		<div class=\"title-logo\"> <h2>avayah</h2> </div>\n		<div class=\"login-header\">\n			<h3>Log in to avayah</h3>\n		</div>\n		<form action=\"/login\" method=\"post\">\n			<div class=\"form-group\">\n				<input type=\"text\" class=\"form-control\" name=\"email\" placeholder=\"Email Address\">\n			</div>\n			<div class=\"form-group\">\n				<input type=\"password\" class=\"form-control\" name=\"password\" placeholder=\"Password\">\n			</div>\n\n			<button type=\"submit\" class=\"btn btn-info btn-lg\">Sign in</button>\n		</form>\n\n		<div class=\"login-bottom\">\n			<p>New to avayah? <a href=\"#signup\">Signup!</a></p>\n		</div>\n\n</div>\n";
+  return "\n<div class=\"login-box col-sm-4 col-sm-offset-4\">\n		<!-- LOGIN FORM -->\n		<div class=\"title-logo\"> <h2>avayah</h2> </div>\n		<div class=\"login-header\">\n			<h3>Log in to avayah</h3>\n		</div>\n		<form action=\"/login\" method=\"post\">\n			<div class=\"form-group\">\n				<input type=\"text\" class=\"form-control\" name=\"email\" placeholder=\"Email Address\">\n			</div>\n			<div class=\"form-group\">\n				<input type=\"password\" class=\"form-control\" name=\"password\" placeholder=\"Password\">\n			</div>\n			<div class=\"checkbox\">\n				<label>\n					<input type=\"checkbox\"> Remember Me\n				</label>\n			</div>\n			<button type=\"submit\" class=\"btn btn-info btn-lg\">Sign in</button>\n		</form>\n\n		<div class=\"login-bottom\">\n			<p>New to avayah? <a href=\"#signup\">Signup!</a></p>\n		</div>\n\n</div>\n";
   });
 
 },{"hbsfy/runtime":23}],19:[function(require,module,exports){

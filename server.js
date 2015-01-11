@@ -45,8 +45,8 @@ if ('development' == app.get('env')) {
 }
 
 //connect to the db server:
-mongoose.connect('mongodb://laser:laser10@kahana.mongohq.com:10050/vynci-test');
-//mongoose.connect('mongodb://localhost/test-avayah2');
+//mongoose.connect('mongodb://laser:laser10@kahana.mongohq.com:10050/vynci-test');
+mongoose.connect('mongodb://localhost/test-avayah2');
 mongoose.connection.on('open', function() {
     console.log("Connected to Mongoose...");
 });
