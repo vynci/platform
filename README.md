@@ -1,6 +1,21 @@
 platform
 
-npm install -g grunt-cli
-npm install
-grunt init:dev
-grunt server
+Install grunt client:
+```sh
+$ npm install -g grunt-cli
+```
+
+Install npm packages:
+```sh
+$ npm install
+```
+
+Compile:
+```sh
+$ grunt init:dev
+```
+
+Start Server:
+```sh
+$ grunt server
+```
